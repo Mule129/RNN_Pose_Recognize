@@ -5,5 +5,5 @@ class camera_creat():
     def __init__(self) -> None:
         pass
     def camera():
-        
+        test = 0
         return
