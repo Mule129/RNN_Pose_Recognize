@@ -2,6 +2,10 @@ from pickletools import optimize
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
+import keras
+from keras.models import Sequential
+
+tf.Variable
 
 num_points = 1000
 vectors_set = []
