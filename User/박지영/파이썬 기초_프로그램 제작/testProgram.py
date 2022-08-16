@@ -5,7 +5,7 @@ def dice():
     return : 랜덤 값(1~6) 반환
     """
     value = rd.randint(1,6)
-    print(f"value : {value}")
+    #print(f"value : {value}")
     return value
 
 def image(n):
@@ -35,8 +35,8 @@ print(image(system))
 print(image(user))
 
 if system > user:
-    print("system win!")
+    print("==system win!==")
 elif system == user:
     print("")
 else:
-    print("User win!")
+    print("==User win!==")
