@@ -69,7 +69,7 @@ for action in actions:
         except:
             pass
 
-"""cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)
 # Set mediapipe model 
 with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
     while cap.isOpened():
@@ -80,7 +80,6 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
 
         # Make detections
         image, results = mediapipe_detection(frame, holistic)
-        print(results)
         
         # Draw landmarks
         draw_styled_landmarks(image, results)
@@ -92,8 +91,8 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break
     cap.release()
-    cv2.destroyAllWindows()"""
-
+    cv2.destroyAllWindows()
+"""
 cap = cv2.VideoCapture(0)
 #미디어 파이프 모델 세팅
 with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
@@ -140,3 +139,4 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                     
     cap.release()
     cv2.destroyAllWindows()
+"""
