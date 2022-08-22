@@ -29,7 +29,6 @@ pose = mp_pose.Pose(
 while cap.isOpened():
     #idx, action 이 actions 에 존재 한다면 < - for문은 actions의 값을 idx, action에 할당해주는것(반대로됨)
     for idx, action in enumerate(actions):
-
         data=[]
 
         #ret, img 에 카매라를 읽은걸 저장해 주고
