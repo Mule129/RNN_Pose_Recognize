@@ -1,3 +1,4 @@
+from atexit import register
 from unittest import result
 import tensorflow as tf
 import mediapipe as mp
@@ -25,18 +26,27 @@ with mp_pose.Pose(
     # To improve performance, optionally mark the image as not writeable to
     # pass by reference.
     #image_0 = pose
-
+    image_0.flags.writeable = False
     image.flags.writeable = False
+    image_0 = cv2.cvtColor(image_0, cv2.COLOR_BGR2RGB)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    resulte_0 = pose.process(image_0)
     results = pose.process(image)
 
 
     # Draw the pose annotation on the image.
     image.flags.writeable = True
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    image_0.flags.writeable = True
+    image_0 = cv2.cvtColor(image_0, cv2.COLOR_RGB2BGR)
     mp_drawing.draw_landmarks(
         image,
         results.pose_landmarks,
+        mp_pose.POSE_CONNECTIONS,
+        landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
+    mp_drawing.draw_landmarks(
+        image_0,
+        resulte_0.pose_landmarks,
         mp_pose.POSE_CONNECTIONS,
         landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
     # Flip the image horizontally for a selfie-view display.
