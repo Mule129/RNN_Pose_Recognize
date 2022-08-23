@@ -2,12 +2,13 @@ import multiprocessing
 import cv2
 import mediapipe as mp
 import numpy as np
-file = np.genfromtxt('C:/Users/dohcv/Desktop/Rock-Paper-Scissors-Machine-main/data/gesture_train_fy.csv', delimiter=',')
+import pyautogui as pag
+file = np.genfromtxt('C:/Users/user/Desktop/Rock-Paper-Scissors-Machine-c1d1a59071b68eb3ff4a059150dbcae164c20107/data/gesture_train_fy.csv', delimiter=',')
 angle = file[:,:-1].astype(np.float32)
 label = file[:, -1].astype(np.float32)
 knn = cv2.ml.KNearest_create()
 knn.train(angle, cv2.ml.ROW_SAMPLE, label)
-run=1
+ran=1
 jump=1
 a=0
 max_num_hands = 1
@@ -31,10 +32,10 @@ class multiCamera(multiprocessing.Process):
         print(f"{self.cameraName} starting, usb port id : {self.id}")
         if self.id == 0:
             print("body_pose def start")
-            body_pose(self.cameraName, self.id)
+            hand_pose(self.cameraName, self.id)
         else:
             print("hand_pose def start")
-            hand_pose(self.cameraName, self.id)
+            #body_pose(self.cameraName, self.id)
 
 def hand_pose(cameraName, id):#python 데코레이터(@) 참고하기
     mp_hand = mp.solutions.hands
@@ -106,27 +107,31 @@ def hand_pose(cameraName, id):#python 데코레이터(@) 참고하기
             # Draw gesture result
                     if idx in gesture.keys():
                         cv2.putText(image, text=gesture[idx].upper(), org=(int(res.landmark[0].x * image.shape[1]), int(res.landmark[0].y * image.shape[0] + 20)), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(255, 255, 255), thickness=2)
-                    
+                ges_result.append({
+                    'ges': gesture[idx],
+                    'id': id
+                })
 #####################################################################################
             cv2.imshow(cameraName, cv2.flip(image, 1))
-            if run == 1:
-                if ges_result[][idx] == 'fist':
+            if ran == 1:
+                if ges_result[1]['ges'] == 'fist':
                     pag.keyDown('j')
                     pag.keyDown('k')
-                    run = run - 1
-            elif run == 0:
-                if gesture[idx] == 'fist':
+                    ran = ran - 1
+            elif ran == 0:
+                if ges_result[1]['ges'] == 'fist':
                     exit
                 else:
-                    run = run + 1
+                    ran = ran + 1
                     pag.keyUp('j')
                     pag.keyUp('k')
+            
             if jump == 1:
-                if gesture[idx] == 'one':
+                if ges_result[2]['ges'] == 'fist':
                     pag.keyDown('b')
                     jump = jump - 1
             elif jump == 0:
-                if gesture[idx] == 'one':
+                if ges_result[2]['ges'] == 'fist':
                     exit
                 else:
                     jump = jump + 1
