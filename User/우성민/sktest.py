@@ -8,7 +8,7 @@ angle = file[:,:-1].astype(np.float32)
 label = file[:, -1].astype(np.float32)
 knn = cv2.ml.KNearest_create()
 knn.train(angle, cv2.ml.ROW_SAMPLE, label)
-ran=1
+run=1
 jump=1
 a=0
 max_num_hands = 1
@@ -32,10 +32,10 @@ class multiCamera(multiprocessing.Process):
         print(f"{self.cameraName} starting, usb port id : {self.id}")
         if self.id == 0:
             print("body_pose def start")
-            hand_pose(self.cameraName, self.id)
+            body_pose(self.cameraName, self.id)
         else:
             print("hand_pose def start")
-            #body_pose(self.cameraName, self.id)
+            hand_pose(self.cameraName, self.id)
 
 def hand_pose(cameraName, id):#python 데코레이터(@) 참고하기
     mp_hand = mp.solutions.hands
@@ -113,19 +113,18 @@ def hand_pose(cameraName, id):#python 데코레이터(@) 참고하기
                 })
 #####################################################################################
             cv2.imshow(cameraName, cv2.flip(image, 1))
-            if ran == 1:
+            if run == 1:
                 if ges_result[1]['ges'] == 'fist':
                     pag.keyDown('j')
                     pag.keyDown('k')
-                    ran = ran - 1
-            elif ran == 0:
+                    run = run - 1
+            elif run == 0:
                 if ges_result[1]['ges'] == 'fist':
                     exit
                 else:
-                    ran = ran + 1
+                    run = run + 1
                     pag.keyUp('j')
                     pag.keyUp('k')
-            
             if jump == 1:
                 if ges_result[2]['ges'] == 'fist':
                     pag.keyDown('b')
