@@ -30,7 +30,7 @@ def hand_pose(cameraName, id):#python 데코레이터(@) 참고하기
 
     camera = cv2.VideoCapture(id)
 
-    print(f"Camera open vital : {camera.isOpened()}")
+    print(f"{cameraName} open vital : {camera.isOpened()}")
     
     if camera.isOpened():
         vital, image = camera.read()
