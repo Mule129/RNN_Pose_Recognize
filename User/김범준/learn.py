@@ -81,9 +81,12 @@ for action in actions:
         #append() : 리스트 마지막에 요소 추가 => labels 리스트의 마지막에 (label_map = {'front': 0...})추가
 
 X = np.array(sequences)
+#X.shape =>(90,30,132)
+
 y = to_categorical(labels).astype(int)
-
-
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.05)
 
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.layers import LSTM, Dense
+from tensorflow.python.keras.callbacks import TensorBoard
