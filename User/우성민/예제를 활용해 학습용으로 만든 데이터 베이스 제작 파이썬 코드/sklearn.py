@@ -6,7 +6,7 @@ import time
 import mediapipe as mp
 
 # 데이터를 저장할 파일 경로 안내
-DATA_PATH = os.path.join('dataset1') 
+DATA_PATH = os.path.join('dataset2') 
 
 # 사용할 액션을 지정
 actions = np.array(['front'])
@@ -109,7 +109,19 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
     
     #액션->영상->프레임
     #액션에서의 루프
+    start = input('실행 하시겠습니까?:')
+    if start =="y":
+        pass
+    else:
+
+        pass
+        
+
     for action in actions:
+        # w를 누르면 실행종료
+        if start !='y':
+            break
+
         # 각 액션에 들어있는 영상에서의 루프
         for sequence in range(no_sequences):
             #각 영상에서의 프레임에 대한 루프
@@ -136,7 +148,7 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
                     #test창으로 프레임이 시작한 그 상태가 아니라면 무슨액션에서 몇번째 영상을 모으고 있는지 표시
                     cv2.imshow('test', image)
-                
+                    
                 #키포인를 내보내는 과정
                 keypoints = extract_keypoints(results)
                 npy_path = os.path.join(DATA_PATH, action, str(sequence), str(frame_num))
@@ -145,6 +157,8 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
                 # q를 누르면 현재 작업을 멈추고 다음 작업으로 간다
                 if cv2.waitKey(10) & 0xFF == ord('q'):
                     break
-                    
+        if cv2.waitKey(10) == 27:
+            break
+                
     cap.release()
     cv2.destroyAllWindows()
