@@ -18,10 +18,10 @@ class multiCamera(multiprocessing.Process):
         print(f"{self.cameraName} starting, usb port id : {self.id}")
         if self.id == 0:
             print("body_pose def start")
-            body_pose(self.cameraName, self.id)
+            hand_pose(self.cameraName, self.id)
         else:
             print("hand_pose def start")
-            hand_pose(self.cameraName, self.id)
+            body_pose(self.cameraName, self.id)
 
 def hand_pose(cameraName, id):#python 데코레이터(@) 참고하기
     mp_hand = mp.solutions.hands

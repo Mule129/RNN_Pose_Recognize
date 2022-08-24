@@ -1,18 +1,22 @@
 {
     "move" : {
-    "front" : 0,
-    "back" : 1,
-    "left" : 2,
-    "right" : 3,
-    "jump" : 4
+    "front" : 0
     },
 
+    "hand" : {
+        
+        "left" : 2,
+        "right" : 3
+    },
     "control" : {
-        "" : 5
+        
+        "jump" : 4,
     },
 
     "hotkey" : {
-        "one" : 6
+        "one" : 6,
+        "two" : 7,
+
     }
 
 }

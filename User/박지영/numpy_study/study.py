@@ -41,9 +41,10 @@ model.add(layers.LSTM(128, activation = "relu"))#LSTM(n) n = 차원(=히든레�
 # Add a Dense layer with 10 units.
 model.add(layers.Dense(10, activation = "softmax"))#앞 레이어(lstm레이어)의 차원 축소를 위한 레이어
 
-model.compile(optimizer = keras.optimizers.Adam(0.01), loss = "mse", metrics = ["mas"])
 
-model.fit(data, epochs = 10)
+model.compile(optimizer = "Adam", loss = "categorical_crossentropy", metrics = ["categorical_accuracy"])
+
+model.fit(x_data, y_data, epochs = 10, callbacks = ["tb_callback"])
 
 model.summary()#모델 요약(모델의 크기 등 정보 보기)
 
