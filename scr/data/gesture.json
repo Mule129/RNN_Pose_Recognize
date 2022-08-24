@@ -1,0 +1,18 @@
+{
+    "move" : {
+    "front" : 0,
+    "back" : 1,
+    "left" : 2,
+    "right" : 3,
+    "jump" : 4
+    },
+
+    "control" : {
+        "" : 5
+    },
+
+    "hotkey" : {
+        "one" : 6
+    }
+
+}
