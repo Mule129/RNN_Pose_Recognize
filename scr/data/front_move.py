@@ -130,7 +130,7 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
 
 
         # 각 액션에 들어있는 영상에서의 루프
-        for sequence in range(no_sequences):
+        while True:
 
             if cv2.waitKey(10) == 27 or off_cnt == 1:
                 off_cnt = 1
