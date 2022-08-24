@@ -1,18 +1,18 @@
+
 import cv2
 import numpy as np
 import os
 from matplotlib import pyplot as plt
 import time
 import mediapipe as mp
+import keyboard
 
+pau = 0
 # 데이터를 저장할 파일 경로 안내
 DATA_PATH = os.path.join('2022_AI_PJ\scr\data\move_data') 
 
 # 사용할 액션을 지정
 actions = np.array(['front'])
-
-# 각 액션마다 30개의 영상을 저장할 예정을 밝힘
-no_sequences = 30
 
 #각 영상은30프레임 사용
 sequence_length = 30
@@ -44,7 +44,7 @@ def extract_keypoints(results):
     pose = np.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]).flatten() if results.pose_landmarks else np.zeros(33*4)
     return np.concatenate([pose])
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 #미디어 파이프 모델 세팅
 with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
     
@@ -60,7 +60,7 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
         pass
 
     for action in actions:
-        
+
         # w를 누르면 실행종료
         if start !='y':
             off_cnt = 1
@@ -74,7 +74,7 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
                 break
 
             data_cnt = len(os.listdir(DATA_PATH+r"\front"))
-            os.makedirs(os.path.join(DATA_PATH, action, str(data_cnt+1)))
+            os.makedirs(os.path.join(DATA_PATH, action, str(data_cnt+4)))
             print(data_cnt)
             #각 영상에서의 프레임에 대한 루프
             for frame_num in range(sequence_length):
@@ -97,18 +97,22 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
                     #test창으로 시작연결중 이라는 글자를 띄운뒤에, 무슨액션에서 몇번째 영상을 모으고있는지 표시
                     cv2.imshow('test', image)
                     cv2.waitKey(2000)
-                else: 
-                    cv2.putText(image, 'Collecting frames for {} Video Number {}'.format(action, data_cnt+1), (15,12), 
-                               cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
-                    #test창으로 프레임이 시작한 그 상태가 아니라면 무슨액션에서 몇번째 영상을 모으고 있는지 표시
-                    cv2.imshow('test', image)
-                    
-                #키포인를 내보내는 과정
-                keypoints = extract_keypoints(results)
-                npy_path = os.path.join(DATA_PATH, action, str(data_cnt+1), str(frame_num))
-                np.save(npy_path, keypoints)
+                if keyboard.read_key() == "s":
+                    pau = 1
+                if keyboard.read_key() == "d":
+                    pau = 0
 
-                
+                if pau == 0:
+                    if frame_num != 0: 
+                        cv2.putText(image, 'Collecting frames for {} Video Number {}'.format(action, data_cnt+1), (15,12), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
+                        #test창으로 프레임이 시작한 그 상태가 아니라면 무슨액션에서 몇번째 영상을 모으고 있는지 표시
+                        cv2.imshow('test', image)
+                    
+                    #키포인를 내보내는 과정
+                    keypoints = extract_keypoints(results)
+                    npy_path = os.path.join(DATA_PATH, action, str(data_cnt+1), str(frame_num))
+                    np.save(npy_path, keypoints)
+
 
                 # q를 누르면 현재 작업을 멈추고 다음 작업으로 간다
                 if cv2.waitKey(10) & 0xFF == ord('q'):
