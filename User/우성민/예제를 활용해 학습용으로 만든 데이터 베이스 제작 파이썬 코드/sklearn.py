@@ -125,6 +125,8 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
         # 각 액션에 들어있는 영상에서의 루프
         for sequence in range(no_sequences):
             #각 영상에서의 프레임에 대한 루프
+            if cv2.waitKey(10) == 27:
+              break 
             for frame_num in range(sequence_length):
 
                 #카메라가 읽은걸 ret과 프레임에 저장
@@ -153,6 +155,8 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
                 keypoints = extract_keypoints(results)
                 npy_path = os.path.join(DATA_PATH, action, str(sequence), str(frame_num))
                 np.save(npy_path, keypoints)
+                if cv2.waitKey(10) == 27:
+                    break
 
                 # q를 누르면 현재 작업을 멈추고 다음 작업으로 간다
                 if cv2.waitKey(10) & 0xFF == ord('q'):
