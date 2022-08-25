@@ -1,9 +1,11 @@
 import numpy as np
 import os
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
+from keras.models import Sequential
+from keras.layers import LSTM, Dense
+from keras.utils import to_categorical
+#from tensorboard import
 
-gesture_list = np.array(["front"])
+gesture_list = np.array([0])
 
 path = r"2022_AI_PJ\scr\data\move_data\front"
 data, labels = [], []
@@ -18,12 +20,15 @@ for i in gesture_list:
         data.append(window)
         labels.append(gesture_list[0])
 
-print("test", np.array(data).shape)
-print("test_2", np.array(labels).shape)
-print(len(data), len(labels))
+print(np.array(data).shape)
+print(np.array(labels).shape)
+
+#print(len(data), len(labels))
+y = to_categorical(131).astype(int)
+print(f"{np.array(y).shape} : y ")
 
 model = Sequential()
-model.add(LSTM(64, return_sequences=True, activation='relu', input_shape=(30,1662)))
+model.add(LSTM(64, return_sequences=True, activation='relu'))
 model.add(LSTM(128, return_sequences=True, activation='relu'))
 model.add(LSTM(64, return_sequences=False, activation='relu'))
 model.add(Dense(64, activation='relu'))
@@ -36,6 +41,8 @@ gesture_list[np.argmax(res)]
 
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 
-model.fit(data, labels, epochs=2000)
+model.fit(data, y, epochs=2000)
 
-model.summary()
+#model.summary()
+
+model.save(r"2022_AI_PJ\User\박지영\numpy_study\model_save")
