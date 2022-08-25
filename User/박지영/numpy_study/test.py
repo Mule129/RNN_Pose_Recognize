@@ -1,4 +1,3 @@
-from cProfile import label
 import numpy as np
 import os
 from tensorflow.keras.models import Sequential
@@ -14,12 +13,15 @@ for i in gesture_list:
         for z in range(len(os.listdir(path+f"\{j}"))):
             dump = np.load(path+f"\\{j}\\{z}.npy")
             window.append(dump)
-        print(f"{window}\n{j}")
-        print(len(window))
+        #print(f"{window}\n{j}")
+        #print(len(window))
         data.append(window)
         labels.append(gesture_list[0])
-np.array(data).shape
+
+print("test", np.array(data).shape)
+print("test_2", np.array(labels).shape)
 print(len(data), len(labels))
+
 model = Sequential()
 model.add(LSTM(64, return_sequences=True, activation='relu', input_shape=(30,1662)))
 model.add(LSTM(128, return_sequences=True, activation='relu'))
