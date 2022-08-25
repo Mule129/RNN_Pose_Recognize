@@ -8,7 +8,7 @@ import mediapipe as mp
 # 데이터를 저장할 파일 경로 안내
 DATA_PATH = os.path.join('2022_AI_PJ\scr\data\move_data') 
 
-# 사용할 액션을 지정
+# 사용할 액션을 지y정
 actions = np.array(['front'])
 
 # 각 액션마다 30개의 영상을 저장할 예정을 밝힘
