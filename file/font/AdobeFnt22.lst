@@ -1,0 +1,71 @@
+%!Adobe-FontList 1.22
+%Locale:0x412
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:CID
+FontName:JalnanOTF
+FamilyName:Jalnan OTF
+StyleName:Regular
+FullName:Jalnan OTF
+MenuName:여기어때 잘난체 OTF
+StyleBits:0
+FamilyNameNative:여기어때 잘난체 OTF
+StyleNameNative:Regular
+FullNameNative:여기어때 잘난체 OTF
+WritingScript:Korean
+OutlineFileName:C:\Users\a24cc\Documents\githubPJ\2022_AI_PJ\file\Font\JalnanOTF.otf
+DataFormat:sfntData
+isCFF:yes
+hasSVG:no
+VariableFontType:NonVariableFont
+FileLength:700060
+FileModTime:1661167488
+WeightClass:700
+WidthClass:5
+AngleClass:0
+NameArray:0,Mac,4,Jalnan OTF
+NameArray:3,Mac,4,여기어때 잘난체 OTF
+NameArray:3,Mac,18,여기어때 잘난체 OTF
+NameArray:0,Win,1,Jalnan OTF
+NameArray:0,Win,16,Jalnan OTF
+NameArray:3,Win,1,여기어때 잘난체 OTF
+NameArray:3,Win,16,여기어때 잘난체 OTF
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Invalid
+OutlineFileName:C:\Users\a24cc\Documents\githubPJ\2022_AI_PJ\file\Font\jalnan-font.pdf
+FileModTime:1661167507
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:NanumNeuRisNeuRisCe
+FamilyName:Nanum NeuRisNeuRisCe
+StyleName:Regular
+FullName:Nanum NeuRisNeuRisCe
+MenuName:나눔손글씨 느릿느릿체
+StyleBits:0
+FamilyNameNative:나눔손글씨 느릿느릿체
+StyleNameNative:Regular
+FullNameNative:나눔손글씨 느릿느릿체
+WritingScript:Korean
+OutlineFileName:C:\Users\a24cc\Documents\githubPJ\2022_AI_PJ\file\Font\나눔손글씨 느릿느릿체.ttf
+DataFormat:sfntData
+hasSVG:no
+VariableFontType:NonVariableFont
+FileLength:5042680
+FileModTime:1661167797
+WeightClass:400
+WidthClass:5
+AngleClass:0
+NameArray:0,Mac,4,Nanum NeuRisNeuRisCe
+NameArray:3,Mac,4,나눔손글씨 느릿느릿체
+NameArray:3,Mac,18,나눔손글씨 느릿느릿체
+NameArray:0,Win,1,Nanum NeuRisNeuRisCe
+NameArray:3,Win,1,나눔손글씨 느릿느릿체
+%EndFont
+
