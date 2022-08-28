@@ -7,7 +7,8 @@ class PoseCollet():
     def __init__(self, id, pose, path):
         self.id = id
         self.pose = pose
-        self.path = r"2022_AI_PJ\scr\data\move_data\data_collet"
+        #저장위치 입력받거나, 자동인식으로 수정)
+        self.data_path = r"2022_AI_PJ\scr\data\move_data\data_collet"
 
     def save_point(results):
         data = []
@@ -24,6 +25,8 @@ class PoseCollet():
     def save_pose(self, data, pose):
         """
         pose : {1 : front(102), 2 : right(114), 3 : left(108), 4 : jump(106), 5 : back(98)}
+        45 line > AttributeError: 'int' object has no attribute 'data_path' error 해결하기
+        add_path os.listdir(path) 파일 개수가 0일때 에러 안뜨는지 확인
         """
         str_pose = ""
         if pose == 0:#python switch - dictionary방식 참고
@@ -39,8 +42,8 @@ class PoseCollet():
             str_pose = "jump"
         elif pose == 98:
             str_pose = "back"
-
-        self.path += f"\{str_pose}"
+        add_path = f"{self.data_path}\{str_pose}\{len(os.listdir(self.path))}"
+        np.save(add_path, data)
 
         return
     
@@ -89,20 +92,22 @@ class PoseCollet():
                 print("key : ", key_value)
                 vital_swich = 1
             
+            #조건문 수정(현재 102만 작동됨(가장 앞에것). 일일히 쓰기는 코드 길이낭비(사실 일일히 쓰기 귀찮음))
             if vital_swich == 0 and key_value == (102 or 114 or 108 or 106 or 98):
                 vital_pose = key_value
 
             if vital_swich == 1:
                 onefps_data = save_point(results)
             
-                print("one_fps_data : ", np.array(onefps_data).shape)
-                print("flatten() : ", np.array(onefps_data))
+                #print("one_fps_data : ", np.array(onefps_data).shape)
+                #print("flatten() : ", np.array(onefps_data))
                 
                 if len(frame_30) == 30:
                     save_pose(0, frame_30, vital_pose)
                     frame_30 = []
                 elif len(frame_30) > 30:
                     print("frame_cnt error")
+                    frame_30 = []
                 else:
                     frame_30.append(onefps_data)
             
