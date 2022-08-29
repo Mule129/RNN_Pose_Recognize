@@ -85,28 +85,27 @@ with mp_pose.Pose(
                     except:
                         pass
 
-                    angle_label6 = np.array([angle], dtype=np.float32)
+                    angle_label = np.array([angle], dtype=np.float32)
                     angle_label1 = np.array([angle1], dtype=np.float32)
                     angle_label2 = np.array([angle2], dtype=np.float32)
                     angle_label3 = np.array([angle3], dtype=np.float32)
                     angle_label4 = np.array([angle4], dtype=np.float32)
                     angle_label5 = np.array([angle5], dtype=np.float32)
-                    a = np.append(angle_label6, angle_label1, angle_label2)
+                    a = np.append(angle_label, angle_label1, angle_label2)
                     b = np.append(angle_label3, angle_label4, angle_label5)
                     angle_label = np.append(a, b, idx)
 
-                d = np.concatenate([angle_label])
+                    d = np.concatenate([angle_label])
 
-                data.append(d)
+                    data.append(d)
 
                 mp_drawing.draw_landmarks(
                     img,
                     result.pose_landmarks,
                     mp_pose.POSE_CONNECTIONS,
                     landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
-                angle_label.clear()
-                a.clear()
-                b.clear()
+
+
                 cv2.imshow('img', img)
                 if cv2.waitKey(1) == ord('q'):
                     break
