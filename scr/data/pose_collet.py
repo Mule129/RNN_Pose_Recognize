@@ -12,28 +12,34 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
         self.mp_hand = 0
 
     def save_point(self, results):
-        data = []
+        data, dump = [], []
+        cnt = 0
 
         if self.vital_pose <= 102:#(1, 33, 4)
             if results.pose_landmarks:
                 for i in results.pose_landmarks.landmark:
                     data.append([i.x, i.y, i.z, i.visibility])
+                    cnt += 1
             else:
                 data.append(np.zeros(33*4))
+            print(f"pose_cont : {cnt}")
 
         elif self.vital_pose == 0:
             print("sellect pose")
         else:
             if results.multi_hand_landmarks:
-                for i in results.multi_hand_landmarks:
-                    for x in self.mp_hand.HandLandmark:
-                        t = i.landmark[x]
-                        print(t, type(t), "test??")
-                        data.append([t.x, t.y, t.z])#(x, y, z)
-                    """print("hand_pose_save", np.array(i).shape)
-                    data.append(i.landmark.x, i.landmark.y, i.landmark)"""
+                for tow_hand in results.multi_hand_landmarks:
+                    for i in self.mp_hand.HandLandmark:
+                        dump = tow_hand.landmark[i]
+                        data.append([dump.x, dump.y, dump.z])#(x, y, z)
+                        cnt += 1
+                    """print("hand_pose_save", np.array(tow_hand).shape)
+                    data.append(tow_hand.landmark.x, tow_hand.landmark.y, tow_hand.landmark)"""
             else:
-                data.append(np.zeros(33*3))#x, y, z
+                data.append(np.zeros(21*3))
+            # 양손 : 42(가끔 한손을 두손으로 인식할 때가 있음), 한손 : 21, 손 x : 0 
+            # -> 최대 손 인식 1로 변경
+            print(f"hand_cont : {cnt}")
 
 
         #np.array().flatten : 다차원 배열 -> 1차원 배열로 변환
@@ -74,7 +80,7 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
         mp_drawing = mp.solutions.drawing_utils
         mp_drawing_styles = mp.solutions.drawing_styles
         cam = cv2.VideoCapture(self.id)
-        hand = self.mp_hand.Hands(static_image_mode = False, min_detection_confidence=0.5, min_tracking_confidence=0.5)
+        hand = self.mp_hand.Hands(static_image_mode = False, max_num_hands = 1, min_detection_confidence=0.5, min_tracking_confidence=0.5)
         pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
         #{0 : save_off, 1 : save_on}
         vital_swich = 0
@@ -114,7 +120,7 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
                         mp_drawing_styles.get_default_hand_landmarks_style(),
                         mp_drawing_styles.get_default_hand_connections_style())
                 except TypeError:
-                    print("skip 1fps(hand not found)")
+                    #print("skip 1fps(hand not found)")
                     pass
  
             image = cv2.flip(image, 1)
@@ -136,7 +142,11 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
                 vital_swich = 1
             
             #조건문 수정(현재 102만 작동됨(가장 앞에것). 일일히 쓰기는 코드 길이낭비(사실 일일히 쓰기 귀찮음))
-            if vital_swich == 0 and key_value == (114 or 102 or 108 or 106 or 98):
+            if vital_swich == 0 and (key_value == 114 
+            or key_value == 102 
+            or key_value == 108 
+            or key_value == 106 
+            or key_value == 98):
                 self.vital_pose = key_value
 
             if vital_swich == 1:
