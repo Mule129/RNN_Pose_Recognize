@@ -1,7 +1,8 @@
 import numpy as np
 import os
 from keras.models import Sequential
-from keras.layers import LSTM, Dense, Flatten
+from keras.layers import LSTM, Dense, Embedding
+#from keras.preprocessing.sequence import pad_sequences
 
 model = Sequential()
 action = {"front" : 0, "back" : 1}
@@ -9,17 +10,6 @@ path = r"2022_AI_PJ\scr\data\move_data\data_collet"
 
 x_data, y_data = [], []
 dump_1, dump_2 = [], []
- 
-"""for action_l in action:
-    for cut_l in range(len(os.listdir(path+f"\{action_l}"))):
-        #print(cut_l)
-        dump_1, dump_2 = [], []
-        for frame_l in range(len(os.listdir(path+f"\{action_l}\{cut_l}"))):
-            frame_data = np.load(path+f"\{action_l}\{cut_l}\{action_l}{frame_l}.npy")
-            dump_1.append(frame_data)
-            dump_2.append(action[action_l])
-        x_data.append(dump_1)
-        y_data.append(dump_2)"""
 
 path_1 = f"2022_AI_PJ\scr\data\move_data\data_collet"
 sell_data = []
@@ -38,15 +28,17 @@ print(f"y_data : {y_ddata}, shape : {np.array(y_ddata).shape}")
 x_data = np.asanyarray(sell_data)
 y_data = np.asanyarray(y_ddata)
 print(x_data, y_data)
-""" 
-print(np.array(x_data).shape)
-print(np.array(y_data).shape)
-x_data = np.asarray(x_data)
-y_data = np.asarray(y_data)
-print(type(x_data), type(y_data))"""
- 
+
+embedding_length = 5
+max_doc_len = 10
+vocab_size = 10000
+model.add(Embedding(vocab_size, embedding_length, input_length=max_doc_len))
+model.compile('rmsprop', 'mse')
+model.summary()
+
+#model.add(Embedding())
 model.add(LSTM(16,
-               input_shape = (33, 4), 
+               input_shape = (10, 5), 
                activation='relu', 
                return_sequences=False)
           )

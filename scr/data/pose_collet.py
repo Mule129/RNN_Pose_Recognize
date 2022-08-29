@@ -15,14 +15,14 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
         data, dump = [], []
         cnt = 0
 
-        if self.vital_pose <= 102:#(1, 33, 4)
+        if self.vital_pose > 0:#(1, 33, 4)
             if results.pose_landmarks:
                 for i in results.pose_landmarks.landmark:
                     data.append([i.x, i.y, i.z, i.visibility])
                     cnt += 1
             else:
-                data.append(np.zeros(33*4))
-            print(f"pose_cont : {cnt}")
+                data = np.zeros((33, 4))
+            #print(f"pose_cont : {cnt}, {np.array(data).shape}")
 
         elif self.vital_pose == 0:
             print("sellect pose")
@@ -33,14 +33,11 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
                         dump = tow_hand.landmark[i]
                         data.append([dump.x, dump.y, dump.z])#(x, y, z)
                         cnt += 1
-                    """print("hand_pose_save", np.array(tow_hand).shape)
-                    data.append(tow_hand.landmark.x, tow_hand.landmark.y, tow_hand.landmark)"""
+
             else:
-                data.append(np.zeros(21*3))
+                data = np.zeros(21,3)
             # 양손 : 42(가끔 한손을 두손으로 인식할 때가 있음), 한손 : 21, 손 x : 0 
             # -> 최대 손 인식 1로 변경
-            print(f"hand_cont : {cnt}")
-
 
         #np.array().flatten : 다차원 배열 -> 1차원 배열로 변환
         return np.array(data)
@@ -87,7 +84,8 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
         #{1 : front(102), 2 : right(114), 3 : left(108), 4 : jump(106), 5 : back(98)}
         self.vital_pose = 0
         frame_30 = []
-
+        #save lock{0 : off, 1 : save}
+        lock = 0
         while True:
             vital, image = cam.read()
 
@@ -98,7 +96,7 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
             image.flags.writeable = False
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             
-            if self.vital_pose <= 102: 
+            if self.vital_pose > 0: 
                 results = pose.process(image)
 
                 image.flags.writeable = True
@@ -127,21 +125,25 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
             cv2.putText(image, f"vital_swich : {vital_swich}, self.vital_pose : {self.vital_pose}, frame_cnt : {len(frame_30)}", (15, 12), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
             cv2.imshow("test_pose", image)
             
-
-            key_value = cv2.waitKey(10)#지연 10ms
-
-            if key_value == 115:#s(stop)
+            key_value = cv2.waitKey(10)#10ms 지연
+            
+            if key_value == 32:#spacebar(stop)
                 print("key : ", key_value)
                 frame_30 = []#리스트 초기화
                 vital_swich = 0
-            elif key_value == 27:#esc, 파일 삭제
+
+            elif key_value == 115:#s(save)
+                lock = 1
+                
+            elif key_value == 27:#esc
                 print("key : ", key_value)
                 break
             elif key_value == 103:#g(go)
                 print("key : ", key_value)
                 vital_swich = 1
+            else:
+                lock = 0
             
-            #조건문 수정(현재 102만 작동됨(가장 앞에것). 일일히 쓰기는 코드 길이낭비(사실 일일히 쓰기 귀찮음))
             if vital_swich == 0 and (key_value == 114 
             or key_value == 102 
             or key_value == 108 
@@ -158,8 +160,12 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
                 if len(frame_30) == 30:
                     self.save_pose(frame_30, self.vital_pose)
                     frame_30 = []
+                elif lock == 1:
+                    lock == 0#초기화 안되는 문제 해결하기
+                    self.save_pose(frame_30, self.vital_pose)
+                    
                 elif len(frame_30) > 30:
-                    print("frame_cnt error")
+                    print("frame_cnt error. delete 30fps data")
                     frame_30 = []
                 else:
                     frame_30.append(onefps_data)
