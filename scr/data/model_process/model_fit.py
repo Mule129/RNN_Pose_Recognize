@@ -29,14 +29,7 @@ x_data = np.asanyarray(sell_data)
 y_data = np.asanyarray(y_ddata)
 print(x_data, y_data)
 
-embedding_length = 5
-max_doc_len = 10
-vocab_size = 10000
-model.add(Embedding(vocab_size, embedding_length, input_length=max_doc_len))
-model.compile('rmsprop', 'mse')
-model.summary()
 
-#model.add(Embedding())
 model.add(LSTM(16,
                input_shape = (10, 5), 
                activation='relu', 
