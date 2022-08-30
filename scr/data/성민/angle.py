@@ -3,7 +3,7 @@ import mediapipe as mp
 import numpy as np
 import time, os
 
-actions = ['front']
+actions = ['front', 'stop']
 seq_length = 30
 secends = 30
 
@@ -28,7 +28,7 @@ def calculate_angle(a,b,c):
 created_time = int(time.time())
 os.makedirs('angle', exist_ok=True)
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 with mp_pose.Pose(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as pose:
@@ -54,17 +54,10 @@ with mp_pose.Pose(
                 img.flags.writeable = True
                 img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
                 if result.pose_landmarks is not None:
-                #     for res in range(6):
-                #         joint = np.zeros((33, 4))
-                #         for j, lm in enumerate(result.pose_landmarks.landmark):
-                #             joint[j] = [lm.x, lm.y, lm.z, lm.visibility]
-                #         v1 = joint[[24, 26, 24, 23, 25], :3]
-                #         v2 = joint[[26, 28, 23, 25, 27], :3]
-                #         v = v2 - v1
-                #         v = v / np.linalg.norm(v, axis=1)[:, np.newaxis]
-                #         print(v)
-
-                    try:
+                    for res in result.pose_landmarks.landmark:
+                        joint = np.zeros((33, 4))
+                        for j, lm in enumerate(result.pose_landmarks.landmark):
+                            joint[j] = [lm.x, lm.y, lm.z, lm.visibility]
                         landmarks = result.pose_landmarks.landmark
 
                         footger1 = [landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value].y]#32
@@ -82,28 +75,24 @@ with mp_pose.Pose(
                         angle3 = calculate_angle(pack2, knee2, foot2)#23 25 27
                         angle4 = calculate_angle(knee1, foot1, footger1)#26 28 32
                         angle5 = calculate_angle(knee2, pack2, footger2)#25 27 31
-                    except:
-                        pass
+                    
+                        
 
-                    angle_label = np.array([angle], dtype=np.float32)
-                    angle_label1 = np.array([angle1], dtype=np.float32)
-                    angle_label2 = np.array([angle2], dtype=np.float32)
-                    angle_label3 = np.array([angle3], dtype=np.float32)
-                    angle_label4 = np.array([angle4], dtype=np.float32)
-                    angle_label5 = np.array([angle5], dtype=np.float32)
-                    a = np.append(angle_label, angle_label1, angle_label2)
-                    b = np.append(angle_label3, angle_label4, angle_label5)
-                    angle_label = np.append(a, b, idx)
+                        angle_label = np.array([angle], dtype=np.float32)
+                        angle_label1 = np.array([angle1], dtype=np.float32)
+                        angle_label2 = np.array([angle2], dtype=np.float32)
+                        angle_label3 = np.array([angle3], dtype=np.float32)
+                        angle_label4 = np.array([angle4], dtype=np.float32)
+                        angle_label5 = np.array([angle5], dtype=np.float32)
+                        angle_label = np.concatenate([angle_label, angle_label1, angle_label2, angle_label3, angle_label4, angle_label5])
+                        
+                        angle_label = np.append(angle_label, idx)
 
-                    d = np.concatenate([angle_label])
+                        d = np.concatenate([joint.flatten(), angle_label])
 
-                    data.append(d)
+                        data.append(d)
 
-                mp_drawing.draw_landmarks(
-                    img,
-                    result.pose_landmarks,
-                    mp_pose.POSE_CONNECTIONS,
-                    landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
+                        mp_drawing.draw_landmarks(img,result.pose_landmarks,mp_pose.POSE_CONNECTIONS)
 
 
                 cv2.imshow('img', img)
