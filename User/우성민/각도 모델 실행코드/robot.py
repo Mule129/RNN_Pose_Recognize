@@ -1,11 +1,11 @@
 import cv2
+import pyautogui as pag
 import mediapipe as mp
 import numpy as np
 from keras.models import load_model
-import time
 actions = ['front', 'stop']
 seq_length = 30
-
+run=1
 model = load_model(r'model1.h5')
 
 mp_pose = mp.solutions.pose
@@ -27,11 +27,12 @@ def calculate_angle(a,b,c):
         
     return angle 
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(2)
 
 seq = []
 action_seq = []
 last_action = None
+a=0
 
 while cap.isOpened():
     ret, img = cap.read()
@@ -42,16 +43,15 @@ while cap.isOpened():
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     result = pose.process(img)
     img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+    
 
     if result.pose_landmarks is not None:
         for res in result.pose_landmarks.landmark:
             joint = np.zeros((33, 4))
             for j, lm in enumerate(result.pose_landmarks.landmark):
                 joint[j] = [lm.x, lm.y, lm.z, lm.visibility]
-            
-            
-            landmarks = result.pose_landmarks.landmark
 
+            landmarks = result.pose_landmarks.landmark
             footger1 = [landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value].y]#32
             footger2 = [landmarks[mp_pose.PoseLandmark.LEFT_FOOT_INDEX.value].x,landmarks[mp_pose.PoseLandmark.LEFT_FOOT_INDEX.value].y]#31
             foot1 = [landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value].y]#28
@@ -78,30 +78,45 @@ while cap.isOpened():
 
             if len(seq) < seq_length:
                 continue
-            
+
 
             input_data = np.expand_dims(np.array(seq[-seq_length:], dtype=np.float32), axis=0)
             y_pred = model.predict(input_data).squeeze()
             print(y_pred)
             i_pred = int(np.argmax(y_pred))
             conf = y_pred[i_pred]
+            seq.clear()
             #0 디맨션이어야 하는데 1 디맨션으로 주어져서 지랄
             
-            if conf < 0.9:
+            if conf < 0.7:
                 continue
 
             action = actions[i_pred]
-            action_seq.append(action)
+            #action_seq.append(action)
 
-            if len(action_seq) < 3:
+            """if len(action_seq) < 3:
                 print('test')
                 continue
+            else:
+                print("?")"""
 
-            this_action = '?'
-            if action_seq[-1] == action_seq[-2] == action_seq[-3]:
-                if action[i_pred] == 'stop':
-                    print('w')
-                this_action = action
+            """this_action = '?'
+            if action_seq[-1] == action_seq[-2] == action_seq[-3]:"""
+            if run == 1:
+                if action == 'front':
+                    pag.keyDown('w')
+                    pag.keyDown('shift')
+                    run = run - 1
+            elif run == 0:
+                if action == 'front':
+                    continue
+                elif action == 'stop':
+                    run = run + 1
+                    pag.keyUp('w')
+                    pag.keyUp('shift')
+
+            #action_seq.clear
+
     cv2.imshow('img', img)
     if cv2.waitKey(1) == ord('q'):
         break
