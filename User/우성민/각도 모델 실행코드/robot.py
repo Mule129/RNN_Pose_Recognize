@@ -31,7 +31,7 @@ def calculate_angle(a,b,c):
 
 #cap = cv2.VideoCapture(2)
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 on_off = "y"
 y = input("작동 시작(y/n) : ")#인풋 귀찮으면 앞부분 주석처리시 바로 실행
 
@@ -40,9 +40,9 @@ action_seq = []
 last_action = None
 a=0
 
-while cap.isOpened():
+while cap.isOpened() and y == "y":
     ret, img = cap.read()
-    if not ret and on_off != "y":
+    if not ret:
         break
 
     img = cv2.flip(img, 1)
@@ -73,11 +73,13 @@ while cap.isOpened():
             "pack2" : [landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].x,landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].y]
             }
 
+            """
             angle1 = calculate_angle(all_data["pack1"], all_data["pack2"], all_data["knee2"])#24 23 25
             angle2 = calculate_angle(all_data["pack1"], all_data["knee1"], all_data["foot1"])#24 26 28
             angle3 = calculate_angle(all_data["pack2"], all_data["knee2"], all_data["foot2"])#23 25 27
             angle4 = calculate_angle(all_data["knee1"], all_data["foot1"], all_data["footger1"])#26 28 32
-            angle5 = calculate_angle(all_data["knee2"], all_data["pack2"], all_data["footger2"])#25 27 31"""
+            angle5 = calculate_angle(all_data["knee2"], all_data["pack2"], all_data["footger2"])#25 27 31
+            """
 
             angle = [calculate_angle(all_data['knee1'], all_data["pack1"], all_data["pack2"]),
             calculate_angle(all_data["pack1"], all_data["pack2"], all_data["knee2"]), 
@@ -139,5 +141,5 @@ while cap.isOpened():
             #action_seq.clear
 
     cv2.imshow('img', img)
-    if cv2.waitKey(1) == ord('q'):
+    if cv2.waitKey(1) == ord('q'):#1ms... 키값 인식하기 힘듦
         break
