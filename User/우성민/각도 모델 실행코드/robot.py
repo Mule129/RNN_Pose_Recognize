@@ -5,8 +5,10 @@ import numpy as np
 from keras.models import load_model
 actions = ['front', 'stop']
 seq_length = 30
+
 run=1
-model = load_model(r'model1.h5')
+#model = load_model(r'model1.h5')
+model = load_model(r'2022_AI_PJ\User\우성민\각도 모델 실행코드\model1.h5')
 
 mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
@@ -27,7 +29,11 @@ def calculate_angle(a,b,c):
         
     return angle 
 
-cap = cv2.VideoCapture(2)
+#cap = cv2.VideoCapture(2)
+
+cap = cv2.VideoCapture(0)
+on_off = "y"
+y = input("작동 시작(y/n) : ")#인풋 귀찮으면 앞부분 주석처리시 바로 실행
 
 seq = []
 action_seq = []
@@ -36,7 +42,7 @@ a=0
 
 while cap.isOpened():
     ret, img = cap.read()
-    if not ret:
+    if not ret and on_off != "y":
         break
 
     img = cv2.flip(img, 1)
@@ -51,28 +57,40 @@ while cap.isOpened():
             for j, lm in enumerate(result.pose_landmarks.landmark):
                 joint[j] = [lm.x, lm.y, lm.z, lm.visibility]
 
+            """데이터 정리
+            1. all_data > 일반 변수에서 사전형식으로 변경, angle > 바로 집어넣음, 
+            2. 큰 데이터들은 사용 후 바로 삭제(메모리에서 삭제는 del, 값만 삭제하고 변수 자체는 그대로 둘시 clear))
+            3. 렉 조금 줄었다(뿌듯)"""
+
             landmarks = result.pose_landmarks.landmark
-            footger1 = [landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value].y]#32
-            footger2 = [landmarks[mp_pose.PoseLandmark.LEFT_FOOT_INDEX.value].x,landmarks[mp_pose.PoseLandmark.LEFT_FOOT_INDEX.value].y]#31
-            foot1 = [landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value].y]#28
-            foot2 = [landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].x,landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].y]#27
-            knee1 = [landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value].y]#26
-            knee2 = [landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].x,landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].y]#25
-            pack1 = [landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].y] #24
-            pack2 = [landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].x,landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].y]  #23
-            
-            angle = calculate_angle(knee1, pack1, pack2)#26 24 23
-            angle1 = calculate_angle(pack1, pack2, knee2)#24 23 25
-            angle2 = calculate_angle(pack1, knee1, foot1)#24 26 28
-            angle3 = calculate_angle(pack2, knee2, foot2)#23 25 27
-            angle4 = calculate_angle(knee1, foot1, footger1)#26 28 32
-            angle5 = calculate_angle(knee2, pack2, footger2)#25 27 31
+            all_data = {"footger1" : [landmarks[mp_pose.PoseLandmark.LEFT_FOOT_INDEX.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value].y],
+            "footger2" : [landmarks[mp_pose.PoseLandmark.LEFT_FOOT_INDEX.value].x,landmarks[mp_pose.PoseLandmark.LEFT_FOOT_INDEX.value].y],
+            "foot1" : [landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value].y],
+            "foot2" : [landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].x,landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].y],
+            "knee1" : [landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value].y],
+            "knee2" : [landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].x,landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].y],
+            "pack1" : [landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].y],
+            "pack2" : [landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].x,landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].y]
+            }
 
-            angle = [angle, angle1, angle2, angle3, angle4, angle5]
-            
-            d = np.concatenate([joint.flatten(), angle])
+            angle1 = calculate_angle(all_data["pack1"], all_data["pack2"], all_data["knee2"])#24 23 25
+            angle2 = calculate_angle(all_data["pack1"], all_data["knee1"], all_data["foot1"])#24 26 28
+            angle3 = calculate_angle(all_data["pack2"], all_data["knee2"], all_data["foot2"])#23 25 27
+            angle4 = calculate_angle(all_data["knee1"], all_data["foot1"], all_data["footger1"])#26 28 32
+            angle5 = calculate_angle(all_data["knee2"], all_data["pack2"], all_data["footger2"])#25 27 31"""
 
-            seq.append(d)
+            angle = [calculate_angle(all_data['knee1'], all_data["pack1"], all_data["pack2"]),
+            calculate_angle(all_data["pack1"], all_data["pack2"], all_data["knee2"]), 
+            calculate_angle(all_data["pack1"], all_data["knee1"], all_data["foot1"]), 
+            calculate_angle(all_data["pack2"], all_data["knee2"], all_data["foot2"]), 
+            calculate_angle(all_data["knee1"], all_data["foot1"], all_data["footger1"]), 
+            calculate_angle(all_data["knee2"], all_data["pack2"], all_data["footger2"])]
+
+            del all_data
+            
+            angle = np.concatenate([joint.flatten(), angle])
+
+            seq.append(angle); del angle
 
             mp_drawing.draw_landmarks(img,result.pose_landmarks,mp_pose.POSE_CONNECTIONS)
 
@@ -81,11 +99,14 @@ while cap.isOpened():
 
 
             input_data = np.expand_dims(np.array(seq[-seq_length:], dtype=np.float32), axis=0)
-            y_pred = model.predict(input_data).squeeze()
+            y_pred = model.predict(input_data)#.squeeze()
+
+            seq.clear(); del input_data
+            
             print(y_pred)
             i_pred = int(np.argmax(y_pred))
             conf = y_pred[i_pred]
-            seq.clear()
+            
             #0 디맨션이어야 하는데 1 디맨션으로 주어져서 지랄
             
             if conf < 0.7:
