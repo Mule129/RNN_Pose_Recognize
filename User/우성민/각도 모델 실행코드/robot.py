@@ -7,8 +7,8 @@ actions = ['front', 'stop']
 seq_length = 30
 
 run=1
-#model = load_model(r'model1.h5')
-model = load_model(r'2022_AI_PJ\User\우성민\각도 모델 실행코드\model1.h5')
+model = load_model(r'model1.h5')
+#model = load_model(r'2022_AI_PJ\User\우성민\각도 모델 실행코드\model1.h5')
 
 mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
@@ -33,14 +33,14 @@ def calculate_angle(a,b,c):
 
 cap = cv2.VideoCapture(1)
 on_off = "y"
-y = input("작동 시작(y/n) : ")#인풋 귀찮으면 앞부분 주석처리시 바로 실행
+#on_off = input("작동 시작(y/n) : ")#인풋 귀찮으면 앞부분 주석처리시 바로 실행
 
 seq = []
 action_seq = []
 last_action = None
 a=0
 
-while cap.isOpened() and y == "y":
+while cap.isOpened() and on_off == "y":
     ret, img = cap.read()
     if not ret:
         break
