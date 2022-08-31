@@ -53,9 +53,11 @@ model = Sequential([
     Dense(2, "softmax")])
 
 model.compile(optimizer="adam",
-loss="mse")
+loss="mse", metrics = ["acc"])
 
 model.fit(x_train, y_train, epochs = 50)
 model.summary()
+a = model.predict(x_test)
+print(a, y_test)
 model_path = r"2022_AI_PJ\User\박지영\model_study\save_mdel"
 model.save(model_path+r"\model_1.h5")

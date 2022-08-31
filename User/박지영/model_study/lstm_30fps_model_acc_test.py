@@ -10,8 +10,8 @@ dump_1 = []
 for x in range(30):
     dump_1.append((data[x]).flatten())
 print(np.array(dump_1).shape)
-
-print(np.array(dump_1[0]).shape)
+dump_1 = np.expand_dims(dump_1, axis=0)
+print(np.array(dump_1).shape)
 
 a = model.predict(dump_1)
 print(a)
