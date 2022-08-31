@@ -60,6 +60,8 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
             str_pose = "jump"
         elif pose == 98:
             str_pose = "back"
+        elif pose == 121:#y
+            str_pose = "stay"
 
         try:
             add_path = f"{self.data_path}\{str_pose}"            
@@ -122,7 +124,7 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
                     pass
  
             image = cv2.flip(image, 1)
-            cv2.putText(image, f"vital_swich : {vital_swich}, self.vital_pose : {self.vital_pose}, frame_cnt : {len(frame_30)}", (15, 12), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+            cv2.putText(image, f"vital_swich : {vital_swich}, self.vital_pose : {self.vital_pose}, frame_cnt : {len(frame_30)}", (15, 12), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
             cv2.imshow("test_pose", image)
             
             key_value = cv2.waitKey(10)#10ms 지연
@@ -148,7 +150,8 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
             or key_value == 102 
             or key_value == 108 
             or key_value == 106 
-            or key_value == 98):
+            or key_value == 98
+            or key_value == 121):
                 self.vital_pose = key_value
 
             if vital_swich == 1:
@@ -172,5 +175,5 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
                         
 
 if __name__ == "__main__":
-    p = PoseCollet(0, r"2022_AI_PJ\scr\data\move_data\data_collet")
+    p = PoseCollet(1, r"2022_AI_PJ\scr\data\move_data\data_collet")
     p.cap_pose()

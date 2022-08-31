@@ -28,7 +28,7 @@ def calculate_angle(a,b,c):
 created_time = int(time.time())
 os.makedirs('angle', exist_ok=True)
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 with mp_pose.Pose(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as pose:

@@ -4,11 +4,11 @@ import mediapipe as mp
 import numpy as np
 run=1
 jump=1
-a=1
-b=1
+a=0
 max_num_hands = 1
 gesture = {
-    1:'left',5:'jump',9:'right'
+    0:'fist', 1:'one', 2:'two', 3:'three', 4:'four', 5:'five',
+    6:'six', 7:'rock', 8:'spiderman', 9:'yeah', 10:'ok',
 }
                  
 # MediaPipe hands model
@@ -20,13 +20,13 @@ hands = mp_hands.Hands(
     min_tracking_confidence=0.5)
 
 # Gesture recognition model
-file = np.genfromtxt(r'angle\gesture_train_fy.csv', delimiter=',')
+file = np.genfromtxt('gesture_train_fy.csv', delimiter=',')
 angle = file[:,:-1].astype(np.float32)
 label = file[:, -1].astype(np.float32)
 knn = cv2.ml.KNearest_create()
 knn.train(angle, cv2.ml.ROW_SAMPLE, label)
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 while cap.isOpened():
     ret, img = cap.read()
@@ -71,35 +71,15 @@ while cap.isOpened():
             
             # Movement of hamster
             if run == 1:
-                if idx == 5:
+                if gesture[idx] == 'fist':
                     pag.keyDown('space')
                     run = run - 1
             elif run == 0:
-                if idx == 5:
+                if gesture[idx] == 'fist':
                     exit
                 else:
                     run = run + 1
                     pag.keyUp('space')
-            if a == 1:
-                if idx == 1:
-                    pag.keyDown('a')
-                    a = a - 1
-            elif a == 0:
-                if idx == 1:
-                    exit
-                else:
-                    a = a + 1
-                    pag.keyUp('a')
-            if b == 1:
-                if idx == 9:
-                    pag.keyDown('d')
-                    b = b - 1
-            elif b == 0:
-                if idx == 9:
-                    exit
-                else:
-                    b = b + 1
-                    pag.keyUp('d')
 
 
             """if gesture[idx]=='fist':

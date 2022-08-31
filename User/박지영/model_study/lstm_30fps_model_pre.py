@@ -16,27 +16,26 @@ class ModelPreprocessing():
         cnt = 0
 
         
-        if results.pose_landmarks.landmark:
+        if results.pose_landmarks:
             for i in results.pose_landmarks.landmark:
                 data.append([i.x, i.y, i.z, i.visibility])
                 cnt += 1
         else:
             data = np.zeros((33, 4))
-        print(data, type(data), np.array(data).shape)
+
         return np.array(data)
 
     def pre_data(self):
-        model_path = self.path+r"\model_1.h5"
+        model_path = self.path
         vital_swich = self.vital_swich
         lock = 0
-        frame_30, fps_data = [], []
+        frame_30 = []
 
         mp_pose = mp.solutions.pose
-        mp_hand = mp.solutions.hands
+        #mp_hand = mp.solutions.hands
         mp_drawing = mp.solutions.drawing_utils
         mp_drawing_styles = mp.solutions.drawing_styles
         pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
-        hand = mp_hand.Hands(static_image_mode = False, max_num_hands = 1, min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
         cam = cv2.VideoCapture(self.id)
         model = keras.models.load_model(model_path)
@@ -53,24 +52,15 @@ class ModelPreprocessing():
             if self.vital_swich > 0: 
                 results = pose.process(image)
 
+                image.flags.writeable = True
+                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
                 mp_drawing.draw_landmarks(image, results.pose_landmarks, 
                 mp_pose.POSE_CONNECTIONS,
                 landmark_drawing_spec = mp_drawing_styles.get_default_pose_landmarks_style())
+
             else:
-                results = hand.process(image)
-
-                try:
-                    for hand_landmarks in results.multi_hand_landmarks:
-                        mp_drawing.draw_landmarks(image, hand_landmarks, 
-                        mp_hand.HAND_CONNECTIONS,
-                        mp_drawing_styles.get_default_hand_landmarks_style(),
-                        mp_drawing_styles.get_default_hand_connections_style())
-                except TypeError:
-                    #print("skip 1fps(hand not found)")
-                    pass
-
-            image.flags.writeable = True
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                pass
 
             image = cv2.flip(image, 1)
             cv2.putText(image, f"vital_swich : {vital_swich}, frame_cnt : {len(frame_30)}", (15, 12), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
@@ -102,7 +92,6 @@ class ModelPreprocessing():
                 #print("flatten() : ", np.array(onefps_data))
                 
                 if len(frame_30) == 30:
-                    print(frame_30)
                     frame_30 = np.asarray(frame_30)
                     pre = model.predict(frame_30)
                     print(pre)
@@ -116,8 +105,12 @@ class ModelPreprocessing():
                     frame_30 = []
 
                 else:
-                    print("test")
                     frame_30.append(onefps_data)
+
+            if fps_cnt == 30:
+                pre = model.predict(fps_data)
+                fps_data, fps_cnt = [], 0
+            fps_cnt += 1
 
 
 if __name__ == "__main__":
