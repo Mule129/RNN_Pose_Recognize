@@ -5,7 +5,7 @@ from keras.layers import LSTM, Dense, Embedding, Flatten, TimeDistributed
 from sklearn.model_selection import train_test_split
 
 model = Sequential()
-action = {"front" : 0, "stay" : 1}
+action = {"right" : 0, "left" : 1, "jump" : 2, "stay" : 3}
 #"back" : 1, "right" : 2, "left" : 3, "jump" : 4, "stay" : 5}
 path = r"2022_AI_PJ\scr\data\move_data\data_collet"
 
@@ -21,7 +21,7 @@ for action_1 in action:
         path_2 = f"2022_AI_PJ\scr\data\move_data\data_collet\{action_1}\{action_1}_{i}.npy"
         np_data = np.load(path_2)
 
-        for x in range(30):
+        for x in range(10):
             dump_1.append((np_data[x]).flatten())
             #print(np.array(dump_1).shape)
 
@@ -48,16 +48,17 @@ print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
 
 
 model = Sequential([
-    LSTM(50, activation= "sigmoid", input_shape=(30, 132)),
-    Dense(10), 
-    Dense(2, "softmax")])
+    LSTM(50, activation= "sigmoid", input_shape=(10, 132)),
+    Dense(30),
+    Dense(10),
+    Dense(4, "softmax")])
 
 model.compile(optimizer="adam",
 loss="mse", metrics = ["acc"])
 
-model.fit(x_train, y_train, epochs = 50)
+model.fit(x_train, y_train, epochs = 35)
 model.summary()
 a = model.predict(x_test)
-print(a, y_test)
+#print(a, y_test)
 model_path = r"2022_AI_PJ\User\박지영\model_study\save_mdel"
-model.save(model_path+r"\model_1.h5")
+model.save(model_path+r"\model_2.h5")
