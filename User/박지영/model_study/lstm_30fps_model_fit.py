@@ -51,7 +51,7 @@ model.compile(optimizer='adam', loss='mse')
 model.fit(x_train, y_train, epochs=30, batch_size=10, validation_data = (x_test, y_test))
 model.summary()
 model_path = r"2022_AI_PJ\User\박지영\model_study\save_mdel"
-model.save(model_path)
+model.save(model_path+r"\model_1.h5")
 prd = model.predict(x_test)
 print(prd)
 print(y_test)
