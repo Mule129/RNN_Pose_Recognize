@@ -9,9 +9,7 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
     def __init__(self, id, path):
         self.id = id
         self.vital_pose = 0
-        #저장위치 입력받거나, 자동인식으로 수정)
         self.data_path = path
-        self.mp_hand = 0
         self.mp_pose = mp.solutions.pose
         self.mp_hand = mp.solutions.hands
 
@@ -29,7 +27,7 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
         return angle 
 
     def save_point(self, results):
-        data, dump = [], []
+        data = []
         cnt = 0
 
         if self.vital_pose == 102 or self.vital_pose == 121:#(1, 33, 4)
@@ -269,5 +267,5 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
                         
 
 if __name__ == "__main__":
-    p = PoseCollet(0, r"2022_AI_PJ\scr\data\move_data\data_collet_school")
+    p = PoseCollet(1, r"2022_AI_PJ\scr\data\move_data\data_collet_school")
     p.cap_pose()
