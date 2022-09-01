@@ -1,5 +1,3 @@
-from operator import concat
-from typing import Concatenate
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -28,14 +26,12 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
 
     def save_point(self, results):
         data = []
-        cnt = 0
 
         if self.vital_pose == 102 or self.vital_pose == 121:#(1, 33, 4)
             if results.pose_landmarks:
                 for i in results.pose_landmarks.landmark:
                     data.append([i.x, i.y, i.z, i.visibility])
-                    
-                    cnt += 1
+
                 landmarks = results.pose_landmarks.landmark
                 data = np.array(data)
                 footger1 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value].y]#32
@@ -81,8 +77,6 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
             if results.pose_landmarks:
                 for i in results.pose_landmarks.landmark:
                     data.append([i.x, i.y, i.z, i.visibility])
-                    
-                    cnt += 1
                 landmarks = results.pose_landmarks.landmark
                 data = np.array(data)
                 p12 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]# 12
@@ -267,5 +261,5 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
                         
 
 if __name__ == "__main__":
-    p = PoseCollet(1, r"2022_AI_PJ\scr\data\move_data\data_collet_school")
+    p = PoseCollet(1, r"2022_AI_PJ\scr\data\move_data\data_collet_0901")
     p.cap_pose()
