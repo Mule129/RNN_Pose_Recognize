@@ -1,0 +1,7 @@
+작동방법 (지영 - data collet : 2022_AI_PJ\scr\data\pose_collet.py)
+: 카메라 켜진 후  f(front), y(stay1), u(stay2), r(right), l(left), j(jump), b(back)(학습 안함x) 중 하나 선택
+
+g(go) 누르면 동작 저장 시작
+스페이스바(stop) 누르면 동작 저장 멈춤
+
+#주의사항 : 멈춘 상태에서 동작 선택해야함
