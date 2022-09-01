@@ -68,7 +68,7 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
                 
                 #angle_label = np.append(angle_label)
                 d = np.concatenate([data.flatten(), angle_label])
-                print(d.shape)
+                # print(d.shape)
                 #np.save(os.path.join(f"2022_AI_PJ\scr\data\move_data\data_test{1}"), d)
                 return np.array(d)
             else:
