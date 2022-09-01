@@ -28,11 +28,12 @@ class ModelPreprocessing():
 
     def save_point_body(self, results):
         data = []
-        cnt = 0
+        #print("save_point_body_start")
         #print("time : ", time.time())
         
         #if self.vital_pose == 102 or self.vital_pose == 121:#(1, 33, 4)
         if results.pose_landmarks:
+            #print("body")
             for i in results.pose_landmarks.landmark:
                 data.append([i.x, i.y, i.z, i.visibility])
 
@@ -66,11 +67,13 @@ class ModelPreprocessing():
             
             #angle_label = np.append(angle_label)
             d = np.concatenate([data.flatten(), angle_label])
-            # print(d.shape)
-            #np.save(os.path.join(f"2022_AI_PJ\scr\data\move_data\data_test{1}"), d)
+            #print("d _ shape : ", d.shape)
+            
             return np.array(d)
         else:
+            #print("test_body")
             data = np.zeros(139)
+            return data
     
     def save_point_hand(self, results):
         data = []
@@ -78,42 +81,45 @@ class ModelPreprocessing():
         #print("time : ", time.time())
         
         #if self.vital_pose == 102 or self.vital_pose == 121:#(1, 33, 4)
-        if results.pose_landmarks:
-                for i in results.pose_landmarks.landmark:
-                    data.append([i.x, i.y, i.z, i.visibility])
-                landmarks = results.pose_landmarks.landmark
-                data = np.array(data)
-                p12 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]# 12
-                p11 = [landmarks[self.mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]#11
-                p14 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_ELBOW.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_ELBOW.value].y]#14
-                p13 = [landmarks[self.mp_pose.PoseLandmark.LEFT_ELBOW.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_ELBOW.value].y]#13
-                p16 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_WRIST.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_WRIST.value].y]#16
-                p15 = [landmarks[self.mp_pose.PoseLandmark.LEFT_WRIST.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_WRIST.value].y]#15
-                p24 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_HIP.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_HIP.value].y] #24
-                p23 = [landmarks[self.mp_pose.PoseLandmark.LEFT_HIP.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_HIP.value].y]  #23
-    
-                angle = self.calculate_angle(p24, p12, p14)
-                angle1 = self.calculate_angle(p23, p11, p13)
-                angle2 = self.calculate_angle(p12, p14, p16)
-                angle3 = self.calculate_angle(p11, p13, p15)
-            
-                
+        if results.pose_landmarks != None:
+            #print("hand")
+            for i in results.pose_landmarks.landmark:
+                data.append([i.x, i.y, i.z, i.visibility])
+            landmarks = results.pose_landmarks.landmark
+            data = np.array(data)
+            p12 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]# 12
+            p11 = [landmarks[self.mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]#11
+            p14 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_ELBOW.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_ELBOW.value].y]#14
+            p13 = [landmarks[self.mp_pose.PoseLandmark.LEFT_ELBOW.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_ELBOW.value].y]#13
+            p16 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_WRIST.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_WRIST.value].y]#16
+            p15 = [landmarks[self.mp_pose.PoseLandmark.LEFT_WRIST.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_WRIST.value].y]#15
+            p24 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_HIP.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_HIP.value].y] #24
+            p23 = [landmarks[self.mp_pose.PoseLandmark.LEFT_HIP.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_HIP.value].y]  #23
 
-                angle_label = np.array([angle], dtype=np.float32)
-                angle_label1 = np.array([angle1], dtype=np.float32)
-                angle_label2 = np.array([angle2], dtype=np.float32)
-                angle_label3 = np.array([angle3], dtype=np.float32)
-                angle_label = np.concatenate([angle_label, angle_label1, angle_label2, angle_label3])
-                
-                angle_label = np.append(angle_label, self.vital_pose)
-                
-                #angle_label = np.append(angle_label)
-                d = np.concatenate([data.flatten(), angle_label])
-                print(d.shape)
-                #np.save(os.path.join(f"2022_AI_PJ\scr\data\move_data\data_test{1}"), d)
-                return np.array(d)
+            angle = self.calculate_angle(p24, p12, p14)
+            angle1 = self.calculate_angle(p23, p11, p13)
+            angle2 = self.calculate_angle(p12, p14, p16)
+            angle3 = self.calculate_angle(p11, p13, p15)
+        
+            
+
+            angle_label = np.array([angle], dtype=np.float32)
+            angle_label1 = np.array([angle1], dtype=np.float32)
+            angle_label2 = np.array([angle2], dtype=np.float32)
+            angle_label3 = np.array([angle3], dtype=np.float32)
+            angle_label = np.concatenate([angle_label, angle_label1, angle_label2, angle_label3])
+            
+            angle_label = np.append(angle_label, self.vital_pose)
+            
+            #angle_label = np.append(angle_label)
+            d = np.concatenate([data.flatten(), angle_label])
+            #print("d _ shape : ", d.shape)
+            #np.save(os.path.join(f"2022_AI_PJ\scr\data\move_data\data_test{1}"), d)
+            return np.array(d)
         else:
+            #print("test_hand")
             data = np.zeros(137)
+            return data
 
         """elif self.vital_pose == 0:
             print("sellect pose")
@@ -144,7 +150,6 @@ class ModelPreprocessing():
         cam = cv2.VideoCapture(self.id)
         model_1 = keras.models.load_model(model_path+r"\model_body.h5")
         model_2 = keras.models.load_model(model_path+r"\model_hand.h5")
-        fps_cnt = 0
         
         while 1:
             #ttt = time.time()
@@ -193,7 +198,7 @@ class ModelPreprocessing():
                 lock = 0
             
             if self.vital_swich == 1:
-                print("test : ", len(frame_30_body), len(frame_30_hand))
+                #print("test : ", len(frame_30_body), len(frame_30_hand))
                 onefps_data_body = self.save_point_body(results)
                 onefps_data_hand = self.save_point_hand(results)
                 if type(onefps_data_body) == int:
@@ -207,9 +212,10 @@ class ModelPreprocessing():
                 if len(frame_30_body) == 10:
                     frame_30_body = np.asarray(frame_30_body)
                     frame_30_body = np.expand_dims(frame_30_body, axis = 0)
+                    #print("frame_30_body : ", frame_30_body)
                     frame_30_body = frame_30_body[:, :, :-1]
                     pre_1 = model_1.predict(frame_30_body)
-                    print(f"front/stay : {pre_1}")
+                    print(f"stay1/front : \n{pre_1}")
                     frame_30_body = []
                     #파이오토
 
@@ -218,7 +224,7 @@ class ModelPreprocessing():
                     frame_30_hand = np.expand_dims(frame_30_hand, axis = 0)
                     frame_30_hand = frame_30_hand[:, :, :-1]
                     pre_2 = model_2.predict(frame_30_hand)
-                    print(f"right/left/jump/stay : {pre_2}")
+                    print(f"right/left/jump/stay2 : \n{pre_2}")
                     frame_30_hand = []
                     #파이오토 실행
                     """if pre_1[0] >= 0.8:
@@ -232,7 +238,7 @@ class ModelPreprocessing():
                     frame_30_body = []
 
                 if len(frame_30_hand) < 10 or len(frame_30_body) < 10:
-                    print("test_data_append")
+                    #print("test_data_append")
                     frame_30_body.append(onefps_data_body)
                     frame_30_hand.append(onefps_data_hand)
             #print("time_2", time.time() - ttt)
