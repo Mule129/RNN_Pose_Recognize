@@ -5,20 +5,20 @@ from keras.layers import LSTM, Dense, Embedding, Flatten, TimeDistributed
 from sklearn.model_selection import train_test_split
 
 model = Sequential()
-action = {"front" : 0, "stay1" : 1}
+action = {"front" : 0, "stay" : 1}
 #"back" : 1, "right" : 2, "left" : 3, "jump" : 4, "stay" : 5}
-path = r"2022_AI_PJ\scr\data\move_data\data_collet_1"
+path = r"2022_AI_PJ\scr\data\move_data\data_collet"
 
 x_data, y_data = [], []
 dump_1, dump_2 = [], []
 
-path_1 = f"2022_AI_PJ\scr\data\move_data\data_collet_1"
+path_1 = f"2022_AI_PJ\scr\data\move_data\data_collet"
 sell_data = []
 y_ddata = []
 for action_1 in action:
 
     for i in range(len(os.listdir(f"{path_1}\{action_1}"))):
-        path_2 = f"2022_AI_PJ\scr\data\move_data\data_collet_1\{action_1}\{action_1}_{i}.npy"
+        path_2 = f"2022_AI_PJ\scr\data\move_data\data_collet\{action_1}\{action_1}_{i}.npy"
         np_data = np.load(path_2)
 
         for x in range(10):
