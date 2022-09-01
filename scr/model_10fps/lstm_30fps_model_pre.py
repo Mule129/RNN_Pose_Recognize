@@ -24,7 +24,7 @@ class ModelPreprocessing():
                 cnt += 1
             data = np.array(data).flatten()
         except AttributeError:
-            data = np.zeros((33 * 4))
+            data = np.zeros((139))
 
         return np.array(data)
 
@@ -41,7 +41,7 @@ class ModelPreprocessing():
         pose = self.mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
         #hand = self.mp_hand.Hands(static_image_mode = False, max_num_hands = 1, min_detection_confidence=0.5, min_tracking_confidence=0.5)
         cam = cv2.VideoCapture(self.id)
-        model_1 = keras.models.load_model(model_path+r"\model_1.h5")
+        model_1 = keras.models.load_model(model_path+r"\model_3.h5")
         model_2 = keras.models.load_model(model_path+r"\model_2.h5")
         fps_cnt = 0
         
@@ -137,5 +137,5 @@ class ModelPreprocessing():
 
 
 if __name__ == "__main__":
-    p = ModelPreprocessing(0, r"2022_AI_PJ\scr\model_10fps\save_mdel")
+    p = ModelPreprocessing(1, r"2022_AI_PJ\scr\model_10fps\save_mdel")
     p.pre_data()
