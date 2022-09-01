@@ -142,7 +142,7 @@ class ModelPreprocessing():
         pose = self.mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
         #hand = self.mp_hand.Hands(static_image_mode = False, max_num_hands = 1, min_detection_confidence=0.5, min_tracking_confidence=0.5)
         cam = cv2.VideoCapture(self.id)
-        model_1 = keras.models.load_model(model_path+r"\model_3.h5")
+        model_1 = keras.models.load_model(model_path+r"\model_body.h5")
         model_2 = keras.models.load_model(model_path+r"\model_hand.h5")
         fps_cnt = 0
         
