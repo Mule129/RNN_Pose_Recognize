@@ -142,6 +142,7 @@ class ModelPreprocessing():
         lock, results = 0, 0
         frame_30_body = []
         frame_30_hand = []
+        run, right, left, jump = 1, 1, 1, 1
 
         self.mp_pose = mp.solutions.pose
         #self.mp_hand = mp.solutions.hands
@@ -150,8 +151,8 @@ class ModelPreprocessing():
         pose = self.mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
         #hand = self.mp_hand.Hands(static_image_mode = False, max_num_hands = 1, min_detection_confidence=0.5, min_tracking_confidence=0.5)
         cam = cv2.VideoCapture(self.id)
-        model_1 = keras.models.load_model(model_path+r"\model_body.h5")
-        model_2 = keras.models.load_model(model_path+r"\model_hand.h5")
+        model_1 = keras.models.load_model(model_path+r"\model_body_0902.h5")
+        model_2 = keras.models.load_model(model_path+r"\model_hand_0902.h5")
         
         while 1:
             #ttt = time.time()
@@ -217,7 +218,7 @@ class ModelPreprocessing():
                     frame_30_body = np.expand_dims(frame_30_body, axis = 0)
                     #print("frame_30_body : ", frame_30_body)
                     frame_30_body = frame_30_body[:, :, :-1]
-                    pre_1 = model_1.predict(frame_30_body)
+                    pre_1 = model_1.predict(frame_30_body).squeeze()
                     print(f"stay1/front : \n{pre_1}")
                     frame_30_body = []
                     
@@ -248,7 +249,7 @@ class ModelPreprocessing():
                     frame_30_hand = np.asarray(frame_30_hand)
                     frame_30_hand = np.expand_dims(frame_30_hand, axis = 0)
                     frame_30_hand = frame_30_hand[:, :, :-1]
-                    pre_2 = model_2.predict(frame_30_hand)
+                    pre_2 = model_2.predict(frame_30_hand).squeeze()
                     print(f"right/left/jump/stay2 : \n{pre_2}")
                     frame_30_hand = []
                     pre_i2 = int(np.argmax(pre_2))

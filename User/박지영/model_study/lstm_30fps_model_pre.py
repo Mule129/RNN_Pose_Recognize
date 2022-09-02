@@ -3,14 +3,16 @@ import mediapipe as mp
 import keras
 import numpy as np
 import time
-import pyautogui
+import pyautogui as pag
 
 class ModelPreprocessing():
     def __init__(self, id, path):
         self.id = id
         self.path = path
         self.vital_pose = 0
-        self.vital_swich = False
+        self.vital_swich = 1
+        self.action_list_1 = ["front", "stay1"]
+        self.action_list_2 = ["right", "left", "jump", "stay2", "stay3"]
 
     def calculate_angle(self, a,b,c):
         a = np.array(a)
@@ -140,8 +142,6 @@ class ModelPreprocessing():
         lock, results = 0, 0
         frame_30_body = []
         frame_30_hand = []
-        key_press_vital_w, key_press_vital_d, key_press_vital_a, key_press_vital_s = False, False, False, False
-
         self.mp_pose = mp.solutions.pose
         #self.mp_hand = mp.solutions.hands
         mp_drawing = mp.solutions.drawing_utils
@@ -149,22 +149,22 @@ class ModelPreprocessing():
         pose = self.mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
         #hand = self.mp_hand.Hands(static_image_mode = False, max_num_hands = 1, min_detection_confidence=0.5, min_tracking_confidence=0.5)
         cam = cv2.VideoCapture(self.id)
-        model_1 = keras.models.load_model(model_path+r"\model_body.h5")
-        model_2 = keras.models.load_model(model_path+r"\model_hand.h5")
+        model_1 = keras.models.load_model(model_path+r"\model_body_1fps_stop.h5")
+        model_2 = keras.models.load_model(model_path+r"\model_hand_1fps_reset.h5")
         
         while 1:
-            #ttt = time.time()
+            
             vital, image = cam.read()
-            #rint("time_1", time.time() - ttt)
+            
 
             if vital != 1:
                 break
-
+            vital_action_f, vital_action_r, vital_action_l, vital_action_j = False, False, False, False
             image.flags.writeable = False
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             
             results = pose.process(image)
-            #results_2 = hand.process(image)
+            
 
             image.flags.writeable = True
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -210,7 +210,7 @@ class ModelPreprocessing():
                 #print("one_fps_data : ", np.array(onefps_data_body).shape)
                 #print("flatten() : ", np.array(onefps_data_body))
                 
-                if len(frame_30_body) == 10:
+                if len(frame_30_body) == 1:
                     frame_30_body = np.asarray(frame_30_body)
                     frame_30_body = np.expand_dims(frame_30_body, axis = 0)
                     #print("frame_30_body : ", frame_30_body)
@@ -219,40 +219,71 @@ class ModelPreprocessing():
                     print(f"front/stay1 : \n{pre_1}")
                     frame_30_body = []
 
-                    #파이오토
-                    if pre_1[0][0] > pre_1[0][1] and key_press_vital_w == False:
-                        pyautogui.keyDown('w')
-                    else:
-                        key_press_vital_w == False
-                        pyautogui.keyUp('w')
-                        #pyautogui.press('')
+                    #파이오토 1
+                    ord_1 = int(np.argmax(pre_1))
 
-                if len(frame_30_hand) == 10:
+                    vital_pose_1 = self.action_list_1[ord_1]
+
+                    print(vital_pose_1)
+                    if vital_pose_1 == "front" and vital_action_f == False:
+                        pag.keyDown("w")
+                        vital_action_f = True
+                    elif vital_pose_1 == "front" and vital_action_f == True:
+                        pass
+                    else:
+                        pag.keyUp("w")
+                        vital_action_f = False
+
+                    
+                    
+
+                if len(frame_30_hand) == 1:
                     frame_30_hand = np.asarray(frame_30_hand)
                     frame_30_hand = np.expand_dims(frame_30_hand, axis = 0)
                     frame_30_hand = frame_30_hand[:, :, :-1]
                     pre_2 = model_2.predict(frame_30_hand)
                     print(f"right/left/jump/stay2 : \n{pre_2}")
                     frame_30_hand = []
-                    
-                    #파이오토
-                    if (pre_2[0][0] > pre_2[0][1]) and (pre_2[0][0] > pre_2[0][2]) and (pre_2[0][0] > pre_2[0][3]) and key_press_vital_d == False:
-                        pyautogui.keyDown('d')
-                    
-                    elif (pre_2[0][1] > pre_2[0][0]) and (pre_2[0][1] > pre_2[0][2]) and (pre_2[1][0] > pre_2[0][3]) and key_press_vital_a == False:
-                        pyautogui.keyDown('a')
-                    elif (pre_2[0][2] > pre_2[0][1]) and (pre_2[0][2] > pre_2[0][0]) and (pre_2[0][2] > pre_2[0][3]) and key_press_vital_s == False:
-                        pyautogui.keyDown('space')
-                    else:
-                        pyautogui.keyDown('d')
-                        pyautogui.keyDown('a')
-                        pyautogui.keyDown('space')
-                        key_press_vital_d = False
-                        key_press_vital_a = False
-                        key_press_vital_s - False
-                        #pyautogui.press('')
-                        pass
 
+                    #파이오토 2
+                    ord_2 = int(np.argmax(pre_2))
+                    
+                    vital_pose_2 = self.action_list_2[ord_2]
+
+                    print(vital_pose_2)
+                    if vital_pose_2 == "right" and vital_action_r == False:
+                        pag.keyDown("d")
+                        vital_action_r = True
+                        print("keydown_d")
+                    elif vital_pose_2 == "right" and vital_action_r == True:
+                        print("keydown_d_pass")
+                        pass
+                        
+                    elif vital_pose_2 == "left" and vital_action_l == False:
+                        pag.keyDown("a")
+                        vital_action_l = True
+                        print("keydown_l")
+                    elif vital_pose_2 == "left" and vital_action_l == True:
+                        print("keydown_l_pass")
+                        pass
+                    elif vital_pose_2 == "jump" and vital_action_j == False:
+                        pag.keyDown("space")
+                        vital_action_l = True
+                        print("keydown_j")
+                    elif vital_pose_2 == "jump" and vital_action_j == True:
+                        print("keydown_j_pass")
+                        pass
+                    else:
+                        print("else _ hand")
+                        pag.keyUp("d")
+                        pag.keyUp("a")
+                        pag.keyUp("space")
+                        vital_action_r = False
+                        vital_action_l = False
+                        vital_action_j = False
+
+
+                    
                 elif lock == 1:
                     lock == 0
                     
@@ -264,6 +295,8 @@ class ModelPreprocessing():
                     #print("test_data_append")
                     frame_30_body.append(onefps_data_body)
                     frame_30_hand.append(onefps_data_hand)
+
+
             #print("time_2", time.time() - ttt)
             #포즈 미실행시 지연 0.03초, 포즈 실행시 지연시간 약 0.06초, 예측 실행시 지연시간 약 0.2초 -> 카메라 프레임이랑 관련 없음, 단순히 반복문 실행시간으로 인하여 그런거임 -> 반복문 안에 반복문 넣어서 프레임 강제 증가? or 몇 프레임 제외 빈 값으로 채워넣어 바로 실행?
             # 약 1초간 ~ > (데이터 수집 / 예측 -> 1fps 수집 약 0.08~0.1초/예측 약 0.1초 )마쳐야 지연이 없어보임

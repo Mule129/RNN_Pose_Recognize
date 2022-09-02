@@ -105,7 +105,7 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
                 
                 #angle_label = np.append(angle_label)
                 d = np.concatenate([data.flatten(), angle_label])
-                print(d.shape)
+                #print(d.shape)
                 #np.save(os.path.join(f"2022_AI_PJ\scr\data\move_data\data_test{1}"), d)
                 return np.array(d)
             else:
@@ -148,6 +148,8 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
             str_pose = "stay1"
         elif pose == 117:
             str_pose = "stay2"
+        elif pose == 105:
+            str_pose = "stay3"
 
         try:
             add_path = f"{self.data_path}\{str_pose}"            
@@ -237,7 +239,7 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
             or key_value == 106 #jump
             or key_value == 98 #back
             or key_value == 121 #y - stop(body)
-            or key_value == 117): #u - stop(hand)
+            or key_value == 117 or key_value == 105): #u - stop(hand)
                 self.vital_pose = key_value
 
             if vital_swich == 1:
@@ -261,5 +263,5 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
                         
 
 if __name__ == "__main__":
-    p = PoseCollet(1, r"2022_AI_PJ\scr\data\move_data\data_collet_0901")
+    p = PoseCollet(1, r"2022_AI_PJ\scr\data\move_data\data_collet_stop_pose")
     p.cap_pose()

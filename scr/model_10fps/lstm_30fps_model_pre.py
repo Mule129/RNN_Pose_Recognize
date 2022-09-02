@@ -10,7 +10,7 @@ class ModelPreprocessing():
         self.id = id
         self.path = path
         self.vital_pose = 0
-        self.vital_swich = False
+        self.vital_swich = True
 
     def calculate_angle(self, a,b,c):
         a = np.array(a)
