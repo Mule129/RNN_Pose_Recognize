@@ -215,7 +215,7 @@ class ModelPreprocessing():
                     #print("frame_30_body : ", frame_30_body)
                     frame_30_body = frame_30_body[:, :, :-1]
                     pre_1 = model_1.predict(frame_30_body)
-                    print(f"stay1/front : \n{pre_1}")
+                    print(f"front/stay1 : \n{pre_1}")
                     frame_30_body = []
                     #파이오토
 
