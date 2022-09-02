@@ -6,14 +6,14 @@ from sklearn.model_selection import train_test_split
 from keras.utils import to_categorical
 
 model = Sequential()
-action = {"right" : 0, "left" : 1, "jump" : 2, "stay2" : 3, "stay3" : 4}
+action = {"right" : 0, "left" : 1, "jump" : 2, "stay3" : 3}
 #"right" : 0, "left" : 1, "jump" : 2, "stay2" : 3, "stay3" : 4
 #
 
 x_data, y_data = [], []
 dump_1, dump_2 = [], []
 
-path_1 = r"2022_AI_PJ\scr\data\move_data\data_collet_0902"
+path_1 = r"2022_AI_PJ\scr\data\move_data\data_collet_small_pose"
 
 sell_data = []
 y_ddata = []
@@ -24,7 +24,9 @@ for action_1 in action:
         path_2 = f"{path_1}\{action_1}\{action_1}_{i}.npy"
         np_data = np.load(path_2)
 
-        for x in range(5):
+        for x in range(1):
+            print(dump_1)
+            print(np.array(dump_1).shape)
             dump_1.append((np_data[x]).flatten())
             #print(np.array(dump_1).shape)
 
@@ -33,14 +35,14 @@ for action_1 in action:
         y_ddata.append(action[action_1])
 
 print(np.array(y_ddata).shape)
-
 print(np.array(sell_data).shape)
+
 x_data = np.asanyarray(sell_data)
 y_data = y_ddata
 y_data = np.asanyarray(y_data)
 
 y_data = to_categorical(y_data, len(action))
-x_data = x_data.astype(np.float32)
+#x_data = x_data.astype(np.float32)
 y_data = y_data.astype(np.float32)
 
 
@@ -72,4 +74,4 @@ model.summary()
 a = model.predict(x_test)
 #print(a, y_test)
 model_path = r"2022_AI_PJ\scr\model_10fps\save_mdel"
-model.save(model_path+r"\model_hand_0902_1.h5")
+model.save(model_path+r"\model_hand_small.h5")

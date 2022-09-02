@@ -3,9 +3,9 @@ import time
 import numpy as np
 import traceback
 
-list = ["front", "left", "right", "jump", "back", "stay1", "stay2"]
+list = ["front", "left", "right", "jump", "back", "stay1", "stay3"]
 cnt = 0
-path = r"2022_AI_PJ\scr\data\move_data\data_collet_school"
+path = r"2022_AI_PJ\scr\data\move_data\data_collet_small_pose"
 error_list = []
 for i in list:
     while True:

@@ -69,56 +69,64 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
                 return np.array(d)
             else:
                 data = np.zeros(139)
+                return data
             #print(f"pose_cont : {cnt}, {np.array(data).shape}")
-
         elif self.vital_pose == 0:
             print("sellect pose")
-        else:
-            if results.pose_landmarks:
-                for i in results.pose_landmarks.landmark:
-                    data.append([i.x, i.y, i.z, i.visibility])
-                landmarks = results.pose_landmarks.landmark
-                data = np.array(data)
-                p12 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]# 12
-                p11 = [landmarks[self.mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]#11
-                p14 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_ELBOW.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_ELBOW.value].y]#14
-                p13 = [landmarks[self.mp_pose.PoseLandmark.LEFT_ELBOW.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_ELBOW.value].y]#13
-                p16 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_WRIST.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_WRIST.value].y]#16
-                p15 = [landmarks[self.mp_pose.PoseLandmark.LEFT_WRIST.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_WRIST.value].y]#15
-                p24 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_HIP.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_HIP.value].y] #24
-                p23 = [landmarks[self.mp_pose.PoseLandmark.LEFT_HIP.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_HIP.value].y]  #23
-    
-                angle = self.calculate_angle(p24, p12, p14)
-                angle1 = self.calculate_angle(p23, p11, p13)
-                angle2 = self.calculate_angle(p12, p14, p16)
-                angle3 = self.calculate_angle(p11, p13, p15)
-            
-                
+            """else:
+                if results.pose_landmarks:
+                    for i in results.pose_landmarks.landmark:
+                        data.append([i.x, i.y, i.z, i.visibility])
+                    landmarks = results.pose_landmarks.landmark
+                    data = np.array(data)
+                    p12 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]# 12
+                    p11 = [landmarks[self.mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]#11
+                    p14 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_ELBOW.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_ELBOW.value].y]#14
+                    p13 = [landmarks[self.mp_pose.PoseLandmark.LEFT_ELBOW.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_ELBOW.value].y]#13
+                    p16 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_WRIST.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_WRIST.value].y]#16
+                    p15 = [landmarks[self.mp_pose.PoseLandmark.LEFT_WRIST.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_WRIST.value].y]#15
+                    p24 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_HIP.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_HIP.value].y] #24
+                    p23 = [landmarks[self.mp_pose.PoseLandmark.LEFT_HIP.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_HIP.value].y]  #23
 
-                angle_label = np.array([angle], dtype=np.float32)
-                angle_label1 = np.array([angle1], dtype=np.float32)
-                angle_label2 = np.array([angle2], dtype=np.float32)
-                angle_label3 = np.array([angle3], dtype=np.float32)
-                angle_label = np.concatenate([angle_label, angle_label1, angle_label2, angle_label3])
+                    angle = self.calculate_angle(p24, p12, p14)
+                    angle1 = self.calculate_angle(p23, p11, p13)
+                    angle2 = self.calculate_angle(p12, p14, p16)
+                    angle3 = self.calculate_angle(p11, p13, p15)
                 
-                angle_label = np.append(angle_label, self.vital_pose)
-                
-                #angle_label = np.append(angle_label)
-                d = np.concatenate([data.flatten(), angle_label])
-                #print(d.shape)
-                #np.save(os.path.join(f"2022_AI_PJ\scr\data\move_data\data_test{1}"), d)
-                return np.array(d)
-            else:
-                data = np.zeros(137)
-            """if results.multi_hand_landmarks:
+                    
+
+                    angle_label = np.array([angle], dtype=np.float32)
+                    angle_label1 = np.array([angle1], dtype=np.float32)
+                    angle_label2 = np.array([angle2], dtype=np.float32)
+                    angle_label3 = np.array([angle3], dtype=np.float32)
+                    angle_label = np.concatenate([angle_label, angle_label1, angle_label2, angle_label3])
+                    
+                    angle_label = np.append(angle_label, self.vital_pose)
+                    
+                    #angle_label = np.append(angle_label)
+                    d = np.concatenate([data.flatten(), angle_label])
+                    #print(d.shape)
+                    #np.save(os.path.join(f"2022_AI_PJ\scr\data\move_data\data_test{1}"), d)
+                    return np.array(d)
+                else:
+                    data = np.zeros(137)"""
+        else:
+            if results.multi_hand_landmarks != None:
                 for tow_hand in results.multi_hand_landmarks:
                     for i in self.mp_hand.HandLandmark:
                         dump = tow_hand.landmark[i]
-                        data.append([dump.x, dump.y, dump.z])#(x, y, z)
-                        cnt += 1
+                        
+                        if np.array(data).shape != (42, 3):
+                            pass
+                        else:
+                            data.append([dump.x, dump.y, dump.z])#(x, y, z)
+                        #print(np.array(data).shape)
+                        
+                return data
 
             else:
-                data = np.zeros(21,3)
+                data = np.zeros(126)
+                return data
             # 양손 : 42(가끔 한손을 두손으로 인식할 때가 있음), 한손 : 21, 손 x : 0 
             # -> 최대 손 인식 1로 변경
             # """
@@ -166,7 +174,7 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
         mp_drawing = mp.solutions.drawing_utils
         mp_drawing_styles = mp.solutions.drawing_styles
         cam = cv2.VideoCapture(self.id)
-        hand = self.mp_hand.Hands(static_image_mode = False, max_num_hands = 1, min_detection_confidence=0.5, min_tracking_confidence=0.5)
+        hand = self.mp_hand.Hands(static_image_mode = False, max_num_hands = 2, min_detection_confidence=0.5, min_tracking_confidence=0.5)
         pose = self.mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
         #{0 : save_off, 1 : save_on}
         vital_swich = 0
@@ -180,12 +188,12 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
 
             if vital != 1:
                 print("camera not open")
-                continue
+                break
 
             image.flags.writeable = False
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             
-            if self.vital_pose > 0: 
+            if self.vital_pose == 102 or self.vital_pose == 121: 
                 results = pose.process(image)
 
                 image.flags.writeable = True
@@ -263,5 +271,5 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
                         
 
 if __name__ == "__main__":
-    p = PoseCollet(1, r"2022_AI_PJ\scr\data\move_data\data_collet_stop_pose")
+    p = PoseCollet(0, r"2022_AI_PJ\scr\data\move_data\data_collet_small_pose")
     p.cap_pose()
