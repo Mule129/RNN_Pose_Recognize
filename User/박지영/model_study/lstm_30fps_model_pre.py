@@ -140,6 +140,7 @@ class ModelPreprocessing():
         lock, results = 0, 0
         frame_30_body = []
         frame_30_hand = []
+        key_press_vital_w, key_press_vital_d, key_press_vital_a, key_press_vital_s = False, False, False, False
 
         self.mp_pose = mp.solutions.pose
         #self.mp_hand = mp.solutions.hands
@@ -217,7 +218,14 @@ class ModelPreprocessing():
                     pre_1 = model_1.predict(frame_30_body)
                     print(f"front/stay1 : \n{pre_1}")
                     frame_30_body = []
+
                     #파이오토
+                    if pre_1[0][0] > pre_1[0][1] and key_press_vital_w == False:
+                        pyautogui.keyDown('w')
+                    else:
+                        key_press_vital_w == False
+                        pyautogui.keyUp('w')
+                        #pyautogui.press('')
 
                 if len(frame_30_hand) == 10:
                     frame_30_hand = np.asarray(frame_30_hand)
@@ -226,9 +234,24 @@ class ModelPreprocessing():
                     pre_2 = model_2.predict(frame_30_hand)
                     print(f"right/left/jump/stay2 : \n{pre_2}")
                     frame_30_hand = []
-                    #파이오토 실행
-                    """if pre_1[0] >= 0.8:
-                        print("w")"""
+                    
+                    #파이오토
+                    if (pre_2[0][0] > pre_2[0][1]) and (pre_2[0][0] > pre_2[0][2]) and (pre_2[0][0] > pre_2[0][3]) and key_press_vital_d == False:
+                        pyautogui.keyDown('d')
+                    
+                    elif (pre_2[0][1] > pre_2[0][0]) and (pre_2[0][1] > pre_2[0][2]) and (pre_2[1][0] > pre_2[0][3]) and key_press_vital_a == False:
+                        pyautogui.keyDown('a')
+                    elif (pre_2[0][2] > pre_2[0][1]) and (pre_2[0][2] > pre_2[0][0]) and (pre_2[0][2] > pre_2[0][3]) and key_press_vital_s == False:
+                        pyautogui.keyDown('space')
+                    else:
+                        pyautogui.keyDown('d')
+                        pyautogui.keyDown('a')
+                        pyautogui.keyDown('space')
+                        key_press_vital_d = False
+                        key_press_vital_a = False
+                        key_press_vital_s - False
+                        #pyautogui.press('')
+                        pass
 
                 elif lock == 1:
                     lock == 0
