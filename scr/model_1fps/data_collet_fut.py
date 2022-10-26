@@ -28,7 +28,7 @@ def calculate_angle(a,b,c):
 created_time = int(time.time())
 os.makedirs('angle1', exist_ok=True)
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 with mp_pose.Pose(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as pose:
@@ -101,7 +101,7 @@ with mp_pose.Pose(
 
             data = np.array(data)
             print(action, data.shape)
-            np.save(os.path.join('angle1', f'raw_{action}_{created_time}'), data)
+            #np.save(os.path.join('angle1', f'raw_{action}_{created_time}'), data)
 
             full_seq_data = []
             for seq in range(len(data) - seq_length):
@@ -109,7 +109,7 @@ with mp_pose.Pose(
 
             full_seq_data = np.array(full_seq_data)
             print(action, full_seq_data.shape)
-            np.save(os.path.join('angle1', f'seq_{action}_{created_time}'), full_seq_data)
+            #np.save(os.path.join('angle1', f'seq_{action}_{created_time}'), full_seq_data)
         
         break
 

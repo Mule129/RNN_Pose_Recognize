@@ -7,7 +7,7 @@ actions = ['right', 'left', 'jump']
 seq_length = 30
 left=1
 right=1
-model = load_model(r'model3.h5')
+model = load_model(r'2022_AI_PJ\scr\model_1fps\model_save\model3.h5')
 mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
 pose = mp_pose.Pose(
@@ -68,7 +68,7 @@ while cap.isOpened():
                 continue
             input_data = np.expand_dims(np.array(seq[-seq_length:], dtype=np.float32), axis=0)
             y_pred = model.predict(input_data).squeeze()
-            print(y_pred)
+            #print(y_pred)
             i_pred = int(np.argmax(y_pred))
             conf = y_pred[i_pred]
             seq.clear()
@@ -109,6 +109,9 @@ while cap.isOpened():
                 else:
                     left = left + 1
                     pag.keyUp('a')
+            cv2.imshow('img', img)
+            if cv2.waitKey(1) == ord('q'):
+                break
 
     cv2.imshow('img', img)
     if cv2.waitKey(1) == ord('q'):

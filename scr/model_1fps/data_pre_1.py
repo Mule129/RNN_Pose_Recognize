@@ -6,7 +6,7 @@ from keras.models import load_model
 actions = ['front', 'stop']
 seq_length = 30
 run=1
-model = load_model(r'model2.h5')
+model = load_model(r'2022_AI_PJ\scr\model_1fps\model_save\model2.h5')
 mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
 pose = mp_pose.Pose(
@@ -99,5 +99,5 @@ while cap.isOpened():
                     pag.keyUp('w')
                     pag.keyUp('shift')
     cv2.imshow('img', img)
-    if cv2.waitKey(1) == ord('q'):
+    if cv2.waitKey(1) == ord("q"):
         break
