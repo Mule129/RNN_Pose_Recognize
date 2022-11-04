@@ -7,7 +7,7 @@ import keras
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 class DataCollet():
-    def __init__(self):
+    def __init__(self, id):
         self.id = 0
     
     def calculate_angle(self, a,b,c):
@@ -132,7 +132,7 @@ class DataCollet():
 
 
 if __name__ == "__main__":
-    dc = DataCollet()
+    dc = DataCollet(id = 0)
     start = dc.cam_show(pose_list=["work", "jump", "left", "right", "stop", "attack"], fps_cnt=100)
     if start == 1:
         dc.cam_show()
