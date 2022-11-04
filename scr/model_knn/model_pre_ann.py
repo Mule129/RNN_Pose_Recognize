@@ -8,7 +8,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 class DataCollet():
     def __init__(self, id):
-        self.id = 0
+        self.id = id
     
     def calculate_angle(self, a,b,c):
         a = np.array(a)
