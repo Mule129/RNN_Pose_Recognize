@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 import os
 import keras
+import pyautogui as pag
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
@@ -36,7 +37,7 @@ class DataCollet():
         cam = cv2.VideoCapture(self.id)
 
         model = keras.models.load_model(r"2022_AI_PJ\scr\model_knn\save_model\action_6.h5")
-
+        acc = 0
         while True:
             vital, img = cam.read()
             if vital != True:
@@ -120,11 +121,35 @@ class DataCollet():
                 data.append([hand_hr, hand_hl, angle_r, angle_l])
                 data.append([hand_v, tall_h1, tall_h2, angle_h])
                 data = np.array([data])
+                
+                
                 result_pre = model.predict(data)
-                print(result_pre)
+                result_pre = result_pre[0]
+                result_pre = (result_pre.index(max(result_pre)))
+                
+                if result_pre == 0:
+                    pag.keyDown("w")
+                elif result_pre == 4:
+                    if acc >= 2:
+                        pag.keyUp("w")
+                        pag.keyUp("a")
+                        pag.keyUp("d")
+                elif result_pre == 1:
+                    pag.keyDown("space")
+                elif result_pre == 2:
+                    pag.keyDown("a")
+                    pag.keyUp("d")
+                elif result_pre == 3:
+                    pag.keyDown("d")
+                    pag.keyUp("a")
+                elif result_pre == 5:
+                    pag.click()
+                    pag.keyUp("a")
+                    pag.keyUp("d")
                 
             else:
                 pass
+            
 
             cv2.imshow("DataCollet", img)
                 
