@@ -5,7 +5,7 @@ import os
 
 class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
     def __init__(self, id, path):
-        self.id = id
+        self.id = 1
         self.vital_pose = 0
         self.data_path = path
         self.mp_pose = mp.solutions.pose
@@ -172,6 +172,7 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
         vital_swich = 0
         #{1 : front(102), 2 : right(114), 3 : left(108), 4 : jump(106), 5 : back(98)}
         self.vital_pose = 0
+        self.vital_hand = 0
         frame_30 = []
         #save lock{0 : off, 1 : save}
         lock = 0
@@ -195,18 +196,19 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
                 self.mp_pose.POSE_CONNECTIONS,
                 landmark_drawing_spec = mp_drawing_styles.get_default_pose_landmarks_style())
 
-            else:
+            elif self.vital_hand > 0:
                 results = hand.process(image)
-
-                image.flags.writeable = True
-                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
                 for hand_landmarks in results.multi_hand_landmarks:
                     mp_drawing.draw_landmarks(image, hand_landmarks, 
                     self.mp_hand.HAND_CONNECTIONS,
                     mp_drawing_styles.get_default_hand_landmarks_style(),
                     mp_drawing_styles.get_default_hand_connections_style())
-
+            else:
+                pass
+            
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
  
             image = cv2.flip(image, 1)
             cv2.putText(image, f"vital_swich : {vital_swich}, self.vital_pose : {self.vital_pose}, frame_cnt : {len(frame_30)}", (15, 12), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)

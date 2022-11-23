@@ -124,9 +124,9 @@ class DataCollet():
                 
                 
                 result_pre = model.predict(data)
-                result_pre = result_pre[0]
-                result_pre = (result_pre.index(max(result_pre)))
-                
+                print((result_pre[0]))
+                #result_pre = (result_pre.index(max(result_pre)))
+                """
                 if result_pre == 0:
                     pag.keyDown("w")
                 elif result_pre == 4:
@@ -145,7 +145,7 @@ class DataCollet():
                 elif result_pre == 5:
                     pag.click()
                     pag.keyUp("a")
-                    pag.keyUp("d")
+                    pag.keyUp("d")"""
                 
             else:
                 pass
@@ -158,7 +158,7 @@ class DataCollet():
 
 if __name__ == "__main__":
     dc = DataCollet(id = 0)
-    start = dc.cam_show(pose_list=["work", "jump", "left", "right", "stop", "attack"], fps_cnt=100)
+    start = dc.cam_show(pose_list=["work", "jump", "left", "right", "stop"], fps_cnt=100)
     if start == 1:
         dc.cam_show()
     

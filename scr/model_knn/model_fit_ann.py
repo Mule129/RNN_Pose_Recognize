@@ -28,4 +28,4 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 model.fit(x_train, y_train, epochs = 100)
 
-model.save("2022_AI_PJ\scr\model_knn\save_model\action_6.h5")
+model.save(r"2022_AI_PJ\scr\model_knn\save_model\action_6_v1.h5")

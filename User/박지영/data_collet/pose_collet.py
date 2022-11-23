@@ -164,7 +164,9 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
         mp_drawing = mp.solutions.drawing_utils
         mp_drawing_styles = mp.solutions.drawing_styles
         cam = cv2.VideoCapture(self.id)
-        hand = self.mp_hand.Hands(static_image_mode = False, max_num_hands = 1, min_detection_confidence=0.5, min_tracking_confidence=0.5)
+        cam.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)#1280-720 / 1920 - 1080
+        cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+        hand = self.mp_hand.Hands(static_image_mode = False, max_num_hands = 3, min_detection_confidence=0.5, min_tracking_confidence=0.5)
         pose = self.mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
         #{0 : save_off, 1 : save_on}
         vital_swich = 0
@@ -183,21 +185,16 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
             image.flags.writeable = False
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             
-            if self.vital_pose > 0: 
+            if self.vital_pose == 121: 
                 results = pose.process(image)
-
-                image.flags.writeable = True
-                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
                 mp_drawing.draw_landmarks(image, results.pose_landmarks, 
                 self.mp_pose.POSE_CONNECTIONS,
                 landmark_drawing_spec = mp_drawing_styles.get_default_pose_landmarks_style())
 
-            else:
+            elif self.vital_pose == 117:
                 results = hand.process(image)
 
-                image.flags.writeable = True
-                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
                 try:
                     for hand_landmarks in results.multi_hand_landmarks:
                         mp_drawing.draw_landmarks(image, hand_landmarks, 
@@ -207,8 +204,28 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
                 except TypeError:
                     #print("skip 1fps(hand not found)")
                     pass
+            elif self.vital_pose == 97:
+                #pose
+                results = pose.process(image)
+                mp_drawing.draw_landmarks(image, results.pose_landmarks, 
+                self.mp_pose.POSE_CONNECTIONS,
+                landmark_drawing_spec = mp_drawing_styles.get_default_pose_landmarks_style())
+
+                #hand
+                results_h = hand.process(image)
+                try:
+                    for hand_landmarks in results_h.multi_hand_landmarks:
+                        mp_drawing.draw_landmarks(image, hand_landmarks, 
+                        self.mp_hand.HAND_CONNECTIONS,
+                        mp_drawing_styles.get_default_hand_landmarks_style(),
+                        mp_drawing_styles.get_default_hand_connections_style())
+                except TypeError:
+                    #print("skip 1fps(hand not found)")
+                    pass
  
             image = cv2.flip(image, 1)
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
             cv2.putText(image, f"vital_swich : {vital_swich}, self.vital_pose : {self.vital_pose}, frame_cnt : {len(frame_30)}", (15, 12), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
             cv2.imshow("test_pose", image)
             
@@ -237,7 +254,8 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
             or key_value == 106 #jump
             or key_value == 98 #back
             or key_value == 121 #y - stop(body)
-            or key_value == 117): #u - stop(hand)
+            or key_value == 117 #u - stop(hand)
+            or key_value == 97):#a - hand-pose all
                 self.vital_pose = key_value
 
             if vital_swich == 1:

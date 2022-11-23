@@ -5,7 +5,7 @@ import os
 
 class DataCollet():
     def __init__(self):
-        self.id = 0
+        self.id = 1
     
     def calculate_angle(self, a,b,c):
         a = np.array(a)
@@ -60,6 +60,7 @@ class DataCollet():
             cv2.putText(img, f"pose : {pose_list[cnt]}", (15, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
 
             if result_hand.multi_hand_landmarks and result_pose.pose_landmarks:
+                loop += 1
                 drawing.draw_landmarks(img, result_pose.pose_landmarks, 
                 pose.POSE_CONNECTIONS,
                 landmark_drawing_spec = drawing_s.get_default_pose_landmarks_style())
@@ -121,7 +122,7 @@ class DataCollet():
                 data.append([hand_v, tall_h1, tall_h2, angle_h])
                 collat_data.append(data)
                 collat_lable.append(cnt)
-                print(np.array(collat_data).shape)
+                #print(np.array(collat_data).shape)
                 
             else:
                 pass
@@ -138,8 +139,8 @@ class DataCollet():
                     cv2.putText(img, f"Next_pose : NULL", (250, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
                 
                 cv2.imshow("DataCollet", img)
-                cv2.waitKey(1000)
-            loop += 1
+                cv2.waitKey(3000)
+            
             cv2.imshow("DataCollet", img)
                 
 
@@ -147,7 +148,7 @@ class DataCollet():
 
 if __name__ == "__main__":
     dc = DataCollet()
-    start = dc.cam_show(pose_list=["work", "jump", "left", "right", "stop", "attack"], fps_cnt=100)
+    start = dc.cam_show(pose_list=["work", "jump", "left", "right", "stop"], fps_cnt=300)
     if start == 1:
         dc.cam_show()
     
