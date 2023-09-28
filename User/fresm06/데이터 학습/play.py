@@ -6,7 +6,7 @@ model = tensorflow.keras.Sequential()
 action = {"front" : 0}
 actions = np.array(['front'])
 
-model.load_weights('model.h5')
+model.load_weights('models.h5')
 
 mp_pose = mp.solutions.pose # 홀리스틱 모델을 불러오고
 mp_drawing = mp.solutions.drawing_utils # 영상 켰을때 보이는 선이랑 점을 그리기 위한 드로잉 유틸 불러오기
@@ -46,7 +46,7 @@ sentence = []
 threshold = 0.8
 
 cap = cv2.VideoCapture(0)
-# Set mediapipe model 
+# Set mediapipe models
 with mp_pose.pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
     while cap.isOpened():
 

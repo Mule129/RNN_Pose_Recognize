@@ -5,7 +5,8 @@ import numpy as np
 import time
 import pyautogui
 
-class ModelPreprocessing():
+
+class ModelPreprocessing:
     def __init__(self, id, path):
         self.id = id
         self.path = path
@@ -25,15 +26,14 @@ class ModelPreprocessing():
             
         return angle
 
-
     def save_point_body(self, results):
         data = []
-        #print("save_point_body_start")
-        #print("time : ", time.time())
+        # print("save_point_body_start")
+        # print("time : ", time.time())
         
-        #if self.vital_pose == 102 or self.vital_pose == 121:#(1, 33, 4)
+        # if self.vital_pose == 102 or self.vital_pose == 121:#(1, 33, 4)
         if results.pose_landmarks:
-            #print("body")
+            # print("bodys")
             for i in results.pose_landmarks.landmark:
                 data.append([i.x, i.y, i.z, i.visibility])
 
@@ -48,12 +48,12 @@ class ModelPreprocessing():
             pack1 = [landmarks[self.mp_pose.PoseLandmark.RIGHT_HIP.value].x,landmarks[self.mp_pose.PoseLandmark.RIGHT_HIP.value].y] #24
             pack2 = [landmarks[self.mp_pose.PoseLandmark.LEFT_HIP.value].x,landmarks[self.mp_pose.PoseLandmark.LEFT_HIP.value].y]  #23
 
-            angle = self.calculate_angle(knee1, pack1, pack2)#26 24 23
-            angle1 = self.calculate_angle(pack1, pack2, knee2)#24 23 25
-            angle2 = self.calculate_angle(pack1, knee1, foot1)#24 26 28
-            angle3 = self.calculate_angle(pack2, knee2, foot2)#23 25 27
-            angle4 = self.calculate_angle(knee1, foot1, footger1)#26 28 32
-            angle5 = self.calculate_angle(knee2, pack2, footger2)#25 27 31                
+            angle = self.calculate_angle(knee1, pack1, pack2)  # 26 24 23
+            angle1 = self.calculate_angle(pack1, pack2, knee2)  # 24 23 25
+            angle2 = self.calculate_angle(pack1, knee1, foot1)  # 24 26 28
+            angle3 = self.calculate_angle(pack2, knee2, foot2)  # 23 25 27
+            angle4 = self.calculate_angle(knee1, foot1, footger1)  # 26 28 32
+            angle5 = self.calculate_angle(knee2, pack2, footger2)  # 25 27 31
 
             angle_label = np.array([angle], dtype=np.float32)
             angle_label1 = np.array([angle1], dtype=np.float32)
@@ -65,9 +65,9 @@ class ModelPreprocessing():
 
             angle_label = np.append(angle_label, self.vital_pose)
             
-            #angle_label = np.append(angle_label)
+            # angle_label = np.append(angle_label)
             d = np.concatenate([data.flatten(), angle_label])
-            #print("d _ shape : ", d.shape)
+            # print("d _ shape : ", d.shape)
             
             return np.array(d)
         else:
@@ -135,6 +135,7 @@ class ModelPreprocessing():
         return np.array(data)"""
 
     def pre_data(self):
+        print("test")
         model_path = self.path
         self.vital_swich = self.vital_swich
         lock, results = 0, 0
@@ -247,5 +248,5 @@ class ModelPreprocessing():
 
 
 if __name__ == "__main__":
-    p = ModelPreprocessing(1, r"2022_AI_PJ\scr\model_10fps\save_mdel")
+    p = ModelPreprocessing(0, r"scr\model_10fps\save_mdel")
     p.pre_data()

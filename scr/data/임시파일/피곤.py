@@ -35,7 +35,7 @@ class ModelPreprocessing():
         
         #if self.vital_pose == 102 or self.vital_pose == 121:#(1, 33, 4)
         if results.pose_landmarks:
-            #print("body")
+            #print("bodys")
             for i in results.pose_landmarks.landmark:
                 data.append([i.x, i.y, i.z, i.visibility])
 

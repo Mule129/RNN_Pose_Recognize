@@ -8,7 +8,7 @@ seq_length = 30
 
 model = load_model(r'C:\Users\user\Documents\GitHub\2022_AI_PJ\scr\data\성민\my_model2.h5')
 
-# MediaPipe hands model
+# MediaPipe hands models
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 hands = mp_hands.Hands(

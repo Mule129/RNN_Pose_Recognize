@@ -59,7 +59,7 @@ predictions = []
 threshold = 0.5
 
 cap = cv2.VideoCapture(0)
-# Set mediapipe model 
+# Set mediapipe models
 with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
     while cap.isOpened():
 

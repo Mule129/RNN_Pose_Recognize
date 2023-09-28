@@ -11,7 +11,7 @@ gesture = {
     6:'six', 7:'rock', 8:'spiderman', 9:'yeah', 10:'ok',
 }
                  
-# MediaPipe hands model
+# MediaPipe hands models
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 hands = mp_hands.Hands(
@@ -19,7 +19,7 @@ hands = mp_hands.Hands(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5)
 
-# Gesture recognition model
+# Gesture recognition models
 file = np.genfromtxt('C:/Users/dohcv/Desktop/Rock-Paper-Scissors-Machine-main/data/gesture_train_fy.csv', delimiter=',')
 angle = file[:,:-1].astype(np.float32)
 label = file[:, -1].astype(np.float32)

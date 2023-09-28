@@ -7,7 +7,7 @@ actions = ['come', 'away', 'spin']
 seq_length = 30
 secs_for_action = 30
 
-# MediaPipe hands model
+# MediaPipe hands models
 mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
 pose = mp_pose.Pose(

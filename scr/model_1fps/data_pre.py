@@ -8,7 +8,7 @@ seq_length = 30
 
 run=1
 model = load_model(r'model1.h5')
-#model = load_model(r'2022_AI_PJ\User\우성민\각도 모델 실행코드\model1.h5')
+#models = load_model(r'2022_AI_PJ\User\우성민\각도 모델 실행코드\model1.h5')
 
 mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils

@@ -128,7 +128,7 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
     
     def save_pose(self, data, pose):
         """
-        pose : {1 : front(102), 2 : right(114), 3 : left(108), 4 : jump(106), 5 : back(98), u : stop_2{hand}, y : stop1{body}}
+        pose : {1 : front(102), 2 : right(114), 3 : left(108), 4 : jump(106), 5 : back(98), u : stop_2{hand}, y : stop1{bodys}}
         """
         str_pose = ""
         if pose == 0:#python switch - dictionary방식 참고
@@ -236,7 +236,7 @@ class PoseCollet():#함수 종료시 자원회수 되는지 확인하기
             or key_value == 108 #left
             or key_value == 106 #jump
             or key_value == 98 #back
-            or key_value == 121 #y - stop(body)
+            or key_value == 121 #y - stop(bodys)
             or key_value == 117): #u - stop(hand)
                 self.vital_pose = key_value
 

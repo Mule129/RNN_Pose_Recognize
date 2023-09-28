@@ -43,6 +43,6 @@ model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categ
 
 model.fit(data, y, epochs=2000)
 
-#model.summary()
+#models.summary()
 
 model.save(r"2022_AI_PJ\User\박지영\numpy_study\model_save")

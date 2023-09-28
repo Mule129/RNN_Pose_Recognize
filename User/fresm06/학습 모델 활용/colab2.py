@@ -11,10 +11,10 @@ mp_drawing = mp.solutions.drawing_utils
 model = Sequential()
 actions = np.array(['front_under'])
 
-# def color(img, model):
+# def color(img, models):
 #     img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
 #     img.flags.writeable = False
-#     result = model.process(img)
+#     result = models.process(img)
 #     img.flags.writeable = True
 #     img = cv2.cvtColor(img,cv2.COLOR_RGB2BGR)
 #     return img, result
